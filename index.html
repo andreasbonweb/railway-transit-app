@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>RailGo - Live Railway Route Planning & Tracking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Mobile frame styling */
+    body {
+      background-color: #0b0f19;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .phone-container {
+      max-width: 420px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+    .pulse-dot {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .4; transform: scale(1.2); }
+    }
+    .train-track {
+      position: relative;
+    }
+    .train-track::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 15px;
+      bottom: 15px;
+      width: 4px;
+      background: #334155;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="text-slate-100 antialiased selection:bg-blue-600">
+
+  <div class="phone-container">
+    <!-- Top Status Bar -->
+    <header class="pt-3 px-5 pb-2 flex justify-between items-center text-xs text-slate-400 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur sticky top-0 z-50">
+      <span id="liveClock" class="font-bold text-slate-200 text-sm">13:20</span>
+      <div class="flex items-center gap-2">
+        <span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-mono font-semibold">LRT Kelana Jaya Line</span>
+        <i class="fa-solid fa-wifi text-[11px]"></i>
+        <i class="fa-solid fa-battery-full text-[12px]"></i>
+      </div>
+    </header>
+
+    <!-- TAB 1: SEARCH SCREEN (Person 2 Wireframe 1 + Person 4 DFD 1.1-1.4) -->
+    <main id="tab-search" class="screen flex-1 p-5 pb-24 overflow-y-auto">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+          <i class="fa-solid fa-train text-sm"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white">LRT Route Planner</h1>
+          <p class="text-xs text-slate-400">Where are you going today?</p>
+        </div>
+      </div>
+
+      <!-- Station Inputs Matching P2 Wireframe -->
+      <div class="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-4 shadow-xl mb-5 backdrop-blur">
+        <div class="space-y-3">
+          <div class="relative">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">From (Origin)</label>
+            <div class="flex items-center bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5">
+              <i class="fa-solid fa-location-dot text-blue-400 text-sm mr-2.5"></i>
+              <select id="selectOrigin" class="w-full bg-transparent text-sm text-white focus:outline-none cursor-pointer">
+                <option value="SS15" class="bg-slate-800">SS15 (KJ29)</option>
+                <option value="Subang Jaya" class="bg-slate-800">Subang Jaya (KJ28)</option>
+                <option value="Kelana Jaya" class="bg-slate-800">Kelana Jaya (KJ24)</option>
+                <option value="Asia Jaya" class="bg-slate-800">Asia Jaya (KJ21)</option>
+                <option value="Universiti" class="bg-slate-800">Universiti (KJ19)</option>
+                <option value="KL Sentral" class="bg-slate-800">KL Sentral (KJ15)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="relative">
+            <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">To (Destination)</label>
+            <div class="flex items-center bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2.5">
+              <i class="fa-solid fa-flag-checkered text-rose-400 text-sm mr-2.5"></i>
+              <select id="selectDest" class="w-full bg-transparent text-sm text-white focus:outline-none cursor-pointer">
+                <option value="KL Sentral" class="bg-slate-800" selected>KL Sentral (KJ15)</option>
+                <option value="Universiti" class="bg-slate-800">Universiti (KJ19)</option>
+                <option value="Asia Jaya" class="bg-slate-800">Asia Jaya (KJ21)</option>
+                <option value="Kelana Jaya" class="bg-slate-800">Kelana Jaya (KJ24)</option>
+                <option value="Subang Jaya" class="bg-slate-800">Subang Jaya (KJ28)</option>
+                <option value="SS15" class="bg-slate-800">SS15 (KJ29)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button id="btnSearch" onclick="calculateRoute()" class="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-blue-600/30 active:scale-[0.98] transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>FIND ROUTE & ETA</span>
+        </button>
+      </div>
+
+      <!-- Live Route Result Card -->
+      <div id="routeResultCard" class="bg-slate-800/40 border border-blue-500/30 rounded-2xl p-4 mb-5">
+        <div class="flex justify-between items-start pb-3 border-b border-slate-700/60">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-blue-400 tracking-wider">Fastest Direct Path</span>
+            <div class="text-base font-bold text-white flex items-center gap-2 mt-0.5">
+              <span id="resOriginText">SS15</span>
+              <i class="fa-solid fa-arrow-right text-xs text-slate-400"></i>
+              <span id="resDestText">KL Sentral</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] uppercase text-slate-400 font-bold block">Est. Duration</span>
+            <span id="resDuration" class="text-base font-bold text-emerald-400">28 mins</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 text-center pt-3 text-xs">
+          <div class="bg-slate-900/60 rounded-lg p-2 border border-slate-700/40">
+            <div class="text-[10px] text-slate-400">Stops</div>
+            <div id="resStops" class="font-bold text-slate-200 mt-0.5">7 stations</div>
+          </div>
+          <div class="bg-slate-900/60 rounded-lg p-2 border border-slate-700/40">
+            <div class="text-[10px] text-slate-400">Distance</div>
+            <div id="resDistance" class="font-bold text-slate-200 mt-0.5">14.2 km</div>
+          </div>
+          <div class="bg-slate-900/60 rounded-lg p-2 border border-slate-700/40">
+            <div class="text-[10px] text-slate-400">Interchange</div>
+            <div class="font-bold text-slate-200 mt-0.5">Direct Line</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Next Trains Schedule (Person 2 Wireframe 1 & ERD Schedules Table) -->
+      <div>
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-sm font-bold text-white uppercase tracking-wider">Next Trains</h2>
+          <span class="text-[11px] text-emerald-400 flex items-center gap-1 font-semibold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span> Live Telemetry
+          </span>
+        </div>
+
+        <div id="trainList" class="space-y-2.5">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 2: LIVE MAP SCREEN (Person 2 Wireframe 2 + Dead Reckoning Simulation) -->
+    <main id="tab-map" class="screen hidden flex-1 p-5 pb-24 overflow-y-auto">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h1 class="text-lg font-bold text-white">Live Train Map</h1>
+          <p class="text-xs text-slate-400">Dead Reckoning & RFID Station Tracker</p>
+        </div>
+        <button onclick="simulateTrainMovement()" class="px-2.5 py-1.5 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/40 rounded-lg text-[11px] text-blue-300 font-semibold flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-forward-step"></i> Simulate Next Stop
+        </button>
+      </div>
+
+      <!-- Current Active Train HUD Card (From Wireframe 2) -->
+      <div class="bg-gradient-to-br from-blue-950/80 to-slate-900 border border-blue-500/40 rounded-2xl p-4 mb-4 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs">
+              <i class="fa-solid fa-train-subway"></i>
+            </div>
+            <div>
+              <span class="text-[11px] text-slate-400 block font-mono">Train #TR-204</span>
+              <span class="text-sm font-bold text-white">Kelana Jaya Bound</span>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10px] font-bold">
+            ON TRACK
+          </span>
+        </div>
+
+        <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span class="text-slate-400 text-[10px] block">Current Location:</span>
+            <span id="hudCurrentStation" class="font-bold text-blue-400 text-sm">SS15</span>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-400 text-[10px] block">Next Station / ETA:</span>
+            <span id="hudNextStation" class="font-bold text-amber-400 text-sm">Subang Jaya (3 mins)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Station Progression Tracker -->
+      <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-4">
+        <div class="text-xs font-bold text-slate-300 mb-3 uppercase tracking-wider">Line Progression (Southbound)</div>
+        <div class="train-track space-y-4 text-xs" id="stationTrackContainer">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </main>
+
+    <!-- TAB 3: ALERTS SCREEN (Person 2 Wireframe 3 + ERD Delays Table) -->
+    <main id="tab-alerts" class="screen hidden flex-1 p-5 pb-24 overflow-y-auto">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h1 class="text-lg font-bold text-white">Transit Alerts</h1>
+          <p class="text-xs text-slate-400">Push Notifications & Disruption Logs</p>
+        </div>
+        <span class="px-2 py-0.5 bg-rose-500/20 border border-rose-500/40 text-rose-300 text-[10px] rounded-full font-bold">
+          1 Active Alert
+        </span>
+      </div>
+
+      <!-- Urgent Arrival Banner (Directly from Person 2 Wireframe 3) -->
+      <div class="bg-emerald-950/40 border border-emerald-500/50 rounded-2xl p-4 mb-3 shadow-lg">
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 text-base">
+            <i class="fa-solid fa-bell"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400">ARRIVING SOON</span>
+              <span class="text-[10px] text-slate-400">Just Now</span>
+            </div>
+            <p class="text-sm font-bold text-white mt-0.5">Your train arrives in 3 minutes</p>
+            <p class="text-xs text-slate-300 mt-0.5">Platform 2 &bull; KL Sentral Interchange</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disruption Delay Alert (Directly from Person 2 Wireframe 3) -->
+      <div class="bg-rose-950/40 border border-rose-500/50 rounded-2xl p-4 mb-4 shadow-lg">
+        <div class="flex items-start gap-3">
+          <div class="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 text-base">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-rose-400">DELAY ALERT</span>
+              <span class="text-[10px] text-slate-400">Updated 2m ago</span>
+            </div>
+            <p class="text-sm font-bold text-white mt-0.5">Train delayed by 10 minutes</p>
+            <p class="text-xs text-slate-300 mt-0.5">Signal maintenance near Universiti station. Technicians deployed.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert Preferences matching SAD Section 2 user story -->
+      <div class="bg-slate-800/40 border border-slate-700/60 rounded-2xl p-4">
+        <h3 class="text-xs font-bold text-white uppercase tracking-wider mb-3">Notification Preferences</h3>
+        <div class="space-y-3 text-xs">
+          <label class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-700/40 cursor-pointer">
+            <span>Arrival Notifications (3 min warning)</span>
+            <input type="checkbox" checked class="w-4 h-4 accent-blue-600 rounded" />
+          </label>
+          <label class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-700/40 cursor-pointer">
+            <span>Delays & Platform Change Alerts</span>
+            <input type="checkbox" checked class="w-4 h-4 accent-blue-600 rounded" />
+          </label>
+          <label class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-700/40 cursor-pointer">
+            <span>Offline Schedule Cache Sync</span>
+            <input type="checkbox" checked class="w-4 h-4 accent-blue-600 rounded" />
+          </label>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation Bar (Matching P2 Wireframe 4-Icon Bottom Nav) -->
+    <nav class="fixed bottom-0 left-0 right-0 max-w-[420px] mx-auto bg-slate-900/90 backdrop-blur border-t border-slate-800 p-2 flex justify-around items-center z-50">
+      <button onclick="switchTab('search')" id="nav-search" class="nav-btn flex flex-col items-center gap-1 text-blue-400 px-4 py-1.5 transition">
+        <i class="fa-solid fa-house text-base"></i>
+        <span class="text-[10px] font-semibold">Search</span>
+      </button>
+      <button onclick="switchTab('map')" id="nav-map" class="nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 px-4 py-1.5 transition">
+        <i class="fa-solid fa-map-location-dot text-base"></i>
+        <span class="text-[10px] font-semibold">Live Map</span>
+      </button>
+      <button onclick="switchTab('alerts')" id="nav-alerts" class="nav-btn flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 px-4 py-1.5 relative transition">
+        <div class="relative">
+          <i class="fa-solid fa-bell text-base"></i>
+          <span class="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full"></span>
+        </div>
+        <span class="text-[10px] font-semibold">Alerts</span>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    // System Data Objects (Reflecting Person 5 ERD Tables: Stations, Trains, Schedules, Delays)
+    const railwaySystem = {
+      stations: [
+        { id: 1, name: "SS15", code: "KJ29", distanceKm: 0 },
+        { id: 2, name: "Subang Jaya", code: "KJ28", distanceKm: 2.1 },
+        { id: 3, name: "Glenmarie", code: "KJ27", distanceKm: 4.8 },
+        { id: 4, name: "Kelana Jaya", code: "KJ24", distanceKm: 8.2 },
+        { id: 5, name: "Asia Jaya", code: "KJ21", distanceKm: 11.5 },
+        { id: 6, name: "Universiti", code: "KJ19", distanceKm: 13.1 },
+        { id: 7, name: "KL Sentral", code: "KJ15", distanceKm: 18.0 }
+      ],
+      trains: [
+        { id: "TR-204", route: "SS15 -> KL Sentral", departure: "8:20 AM", etaMin: 5, status: "On Time", statusColor: "emerald" },
+        { id: "TR-208", route: "SS15 -> KL Sentral", departure: "8:35 AM", etaMin: 20, status: "On Time", statusColor: "emerald" },
+        { id: "TR-212", route: "SS15 -> KL Sentral", departure: "8:50 AM", etaMin: 35, status: "Delayed 10m", statusColor: "rose" }
+      ],
+      currentTrainIndex: 0 // Track progression index
+    };
+
+    // Tab Switcher
+    function switchTab(tabName) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-blue-400');
+        btn.classList.add('text-slate-400');
+      });
+
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+      document.getElementById(`nav-${tabName}`).classList.remove('text-slate-400');
+      document.getElementById(`nav-${tabName}`).classList.add('text-blue-400');
+    }
+
+    // Render Trains List in Search Tab
+    function renderTrains() {
+      const container = document.getElementById('trainList');
+      container.innerHTML = railwaySystem.trains.map((t, idx) => `
+        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-800/80 border border-slate-700/60 hover:border-slate-600 transition">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center font-mono font-bold text-xs">
+              <i class="fa-solid fa-train"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-sm font-bold text-white">${t.departure}</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded font-semibold ${t.status.includes('Delayed') ? 'bg-rose-500/20 text-rose-300' : 'bg-emerald-500/20 text-emerald-300'}">
+                  ${t.status}
+                </span>
+              </div>
+              <span class="text-[11px] text-slate-400 font-mono">${t.id} &bull; To KL Sentral</span>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-sm font-bold text-blue-400">${t.etaMin} min</span>
+            <span class="block text-[10px] text-slate-400">Wait ETA</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Dynamic Route Calculation (Matching DFD Process 1.4: Calculate ETA)
+    function calculateRoute() {
+      const orig = document.getElementById('selectOrigin').value;
+      const dest = document.getElementById('selectDest').value;
+
+      if (orig === dest) {
+        alert("Origin and destination cannot be identical.");
+        return;
+      }
+
+      document.getElementById('resOriginText').innerText = orig;
+      document.getElementById('resDestText').innerText = dest;
+      
+      // Calculate simple mock dynamic distance
+      const st1 = railwaySystem.stations.find(s => s.name === orig) || { distanceKm: 0 };
+      const st2 = railwaySystem.stations.find(s => s.name === dest) || { distanceKm: 15 };
+      const diffKm = Math.abs(st2.distanceKm - st1.distanceKm) || 12.4;
+      const estMins = Math.round(diffKm * 1.8) + 4;
+      const stops = Math.max(2, Math.round(diffKm / 2.2));
+
+      document.getElementById('resDuration').innerText = `${estMins} mins`;
+      document.getElementById('resStops').innerText = `${stops} stations`;
+      document.getElementById('resDistance').innerText = `${diffKm.toFixed(1)} km`;
+
+      // Highlight update animation
+      const card = document.getElementById('routeResultCard');
+      card.classList.add('ring-2', 'ring-blue-500');
+      setTimeout(() => card.classList.remove('ring-2', 'ring-blue-500'), 600);
+    }
+
+    // Render Station Track in Live Map Tab
+    function renderStationTrack() {
+      const container = document.getElementById('stationTrackContainer');
+      const curIdx = railwaySystem.currentTrainIndex;
+
+      container.innerHTML = railwaySystem.stations.map((st, i) => {
+        const isCurrent = i === curIdx;
+        const isPassed = i < curIdx;
+        const isNext = i === curIdx + 1;
+
+        return `
+          <div class="flex items-center gap-3 relative z-10">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 
+              ${isCurrent ? 'bg-blue-600 text-white ring-4 ring-blue-500/30 shadow-lg shadow-blue-500/50 pulse-dot' : 
+                isPassed ? 'bg-slate-700 text-slate-400' : 'bg-slate-800 text-slate-300 border border-slate-600'}">
+              ${isCurrent ? '<i class="fa-solid fa-train"></i>' : (i + 1)}
+            </div>
+            <div class="flex-1 bg-slate-900/60 border ${isCurrent ? 'border-blue-500/50 bg-blue-950/20' : 'border-slate-800'} rounded-xl p-2.5 flex justify-between items-center">
+              <div>
+                <div class="font-bold text-sm ${isCurrent ? 'text-blue-400' : isPassed ? 'text-slate-500' : 'text-slate-200'}">
+                  ${st.name}
+                </div>
+                <div class="text-[10px] text-slate-400 font-mono">${st.code} &bull; Platform 1</div>
+              </div>
+              <div class="text-right">
+                ${isCurrent ? '<span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/30 text-blue-300 font-bold">HERE NOW</span>' : 
+                  isNext ? '<span class="text-[10px] text-amber-400 font-bold">NEXT (3 min)</span>' : 
+                  isPassed ? '<span class="text-[10px] text-slate-500">Passed</span>' : 
+                  `<span class="text-[10px] text-slate-400">+${(i - curIdx) * 4} min</span>`}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Update HUD
+      const curSt = railwaySystem.stations[curIdx];
+      const nextSt = railwaySystem.stations[curIdx + 1] || { name: "Terminus" };
+      document.getElementById('hudCurrentStation').innerText = curSt.name;
+      document.getElementById('hudNextStation').innerText = `${nextSt.name} (${nextSt.name === "Terminus" ? "Arrived" : "3 mins"})`;
+    }
+
+    // Step to Next Station (Simulation for Live Demo)
+    function simulateTrainMovement() {
+      if (railwaySystem.currentTrainIndex < railwaySystem.stations.length - 1) {
+        railwaySystem.currentTrainIndex++;
+      } else {
+        railwaySystem.currentTrainIndex = 0;
+      }
+      renderStationTrack();
+    }
+
+    // Real-Time Clock
+    function updateClock() {
+      const now = new Date();
+      const hrs = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('liveClock').innerText = `${hrs}:${mins}`;
+    }
+
+    // Initialize App
+    window.addEventListener('DOMContentLoaded', () => {
+      renderTrains();
+      renderStationTrack();
+      setInterval(updateClock, 1000);
+      updateClock();
+    });
+  </script>
+</body>
+</html>
