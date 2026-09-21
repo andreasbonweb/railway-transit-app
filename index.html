@@ -145,7 +145,7 @@
       <div>
         <div class="flex justify-between items-center mb-3">
           <h2 class="text-sm font-bold text-white uppercase tracking-wider">Next Trains</h2>
-          <span class="text-[11px] text-neutral-400 flex items-center gap-1 font-semibold">
+          <span id="serviceStatusBadge" class="text-[11px] text-neutral-400 flex items-center gap-1 font-semibold" title="Service status source">
             <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span> Live Telemetry · MYT
           </span>
         </div>
@@ -307,6 +307,8 @@
       trains: [],
       lrtSchedule: { firstService: 5 * 60 + 30, lastService: 23 * 60 + 30, frequency: 15 },
       timezone: "Asia/Kuala_Lumpur",
+      serviceStatus: null,
+      serviceStatusSource: 'schedule',
       currentTrainIndex: 0 // Track progression index
     };
 
@@ -341,6 +343,48 @@
       }).format(new Date(Date.UTC(2026, 0, 1, hour, minute)));
     }
 
+    const SERVICE_STATUS_API = 'https://api.mtrec.name.my/api/servicestatus';
+
+    function statusText(value) {
+      return typeof value === 'string' ? value.toLowerCase() : '';
+    }
+
+    function findStatusText(value) {
+      if (typeof value === 'string') return value;
+      if (Array.isArray(value)) return value.map(findStatusText).join(' ');
+      if (value && typeof value === 'object') return Object.values(value).map(findStatusText).join(' ');
+      return '';
+    }
+
+    async function fetchServiceStatus() {
+      try {
+        const response = await fetch(SERVICE_STATUS_API, { headers: { Accept: 'application/json' } });
+        if (!response.ok) throw new Error(`Status API returned ${response.status}`);
+        railwaySystem.serviceStatus = await response.json();
+        railwaySystem.serviceStatusSource = 'api';
+      } catch (error) {
+        console.warn('[v0] Service status API unavailable; using timetable fallback.', error);
+        railwaySystem.serviceStatus = null;
+        railwaySystem.serviceStatusSource = 'schedule';
+      }
+      updateServiceStatusBadge();
+    }
+
+    function updateServiceStatusBadge() {
+      const badge = document.getElementById('serviceStatusBadge');
+      if (!badge) return;
+      const isApi = railwaySystem.serviceStatusSource === 'api';
+      badge.innerHTML = `<span class="w-2 h-2 rounded-full ${isApi ? 'bg-green-500' : 'bg-yellow-500'} pulse-dot"></span> ${isApi ? 'Live API · MYT' : 'Timetable · MYT'}`;
+      badge.title = isApi ? 'Live service status from api.mtrec.name.my' : 'Live API unavailable; showing scheduled LRT times';
+    }
+
+    function getLiveStatus(index) {
+      const text = statusText(findStatusText(railwaySystem.serviceStatus));
+      if (!text) return index === 2 ? { label: 'Delayed 10m', color: 'red', delay: 10 } : { label: 'On Time', color: 'green', delay: 0 };
+      const delayed = /delay|disrupt|suspend|停|gangguan|lambat/.test(text);
+      return delayed ? { label: 'Service Alert', color: 'red', delay: 0 } : { label: 'On Time', color: 'green', delay: 0 };
+    }
+
     function refreshTrainSchedule() {
       const now = getMalaysiaNow();
       const { firstService, lastService, frequency } = railwaySystem.lrtSchedule;
@@ -348,15 +392,15 @@
       if (now.totalMinutes < firstService) nextDeparture = firstService;
       const departures = Array.from({ length: 3 }, (_, index) => nextDeparture + index * frequency);
       railwaySystem.trains = departures.map((departure, index) => {
-        const delayMinutes = index === 2 ? 10 : 0;
-        const etaMin = Math.max(0, departure - now.totalMinutes) + delayMinutes;
+        const liveStatus = getLiveStatus(index);
+        const etaMin = Math.max(0, departure - now.totalMinutes) + liveStatus.delay;
         return {
           id: `TR-${204 + index * 4}`,
           route: 'SS15 -> KL Sentral',
           departure: formatScheduleTime(departure),
           etaMin,
-          status: delayMinutes ? `Delayed ${delayMinutes}m` : 'On Time',
-          statusColor: delayMinutes ? 'red' : 'green'
+          status: liveStatus.label,
+          statusColor: liveStatus.color
         };
       }).filter(train => nextDeparture <= lastService + frequency);
       renderTrains();
@@ -483,9 +527,10 @@
     // Initialize App
     window.addEventListener('DOMContentLoaded', () => {
       refreshTrainSchedule();
+      fetchServiceStatus().then(refreshTrainSchedule);
       renderStationTrack();
       setInterval(updateClock, 1000);
-      setInterval(refreshTrainSchedule, 30000);
+      setInterval(() => fetchServiceStatus().then(refreshTrainSchedule), 30000);
       updateClock();
     });
   </script>
