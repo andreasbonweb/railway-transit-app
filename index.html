@@ -399,21 +399,35 @@
     function refreshTrainSchedule() {
       const now = getMalaysiaNow();
       const { firstService, lastService, frequency } = railwaySystem.lrtSchedule;
-      let nextDeparture = firstService + Math.ceil((now.totalMinutes - firstService) / frequency) * frequency;
-      if (now.totalMinutes < firstService) nextDeparture = firstService;
+      const beforeFirstTrain = now.totalMinutes < firstService;
+      const afterLastTrain = now.totalMinutes > lastService;
+      const nextServiceOffset = afterLastTrain ? 24 * 60 : 0;
+      let nextDeparture = beforeFirstTrain
+        ? firstService
+        : afterLastTrain
+          ? firstService + nextServiceOffset
+          : firstService + Math.ceil((now.totalMinutes - firstService) / frequency) * frequency;
       const departures = Array.from({ length: 3 }, (_, index) => nextDeparture + index * frequency);
       railwaySystem.trains = departures.map((departure, index) => {
+        const departureOnNextDay = departure >= 24 * 60;
+        const scheduleMinutes = departure % (24 * 60);
+        const minutesUntilDeparture = departureOnNextDay
+          ? departure - now.totalMinutes
+          : Math.max(0, departure - now.totalMinutes);
         const liveStatus = getLiveStatus(index);
-        const etaMin = Math.max(0, departure - now.totalMinutes) + liveStatus.delay;
+        const etaMin = minutesUntilDeparture + liveStatus.delay;
         return {
           id: `TR-${204 + index * 4}`,
           route: 'SS15 -> KL Sentral',
-          departure: formatScheduleTime(departure),
+          departure: formatScheduleTime(scheduleMinutes),
           etaMin,
           status: liveStatus.label,
-          statusColor: liveStatus.color
+          statusColor: liveStatus.color,
+          departureMinutes: scheduleMinutes,
+          nextDay: departureOnNextDay
         };
-      }).filter(train => nextDeparture <= lastService + frequency);
+      }).filter(train => train.nextDay || train.departureMinutes <= lastService)
+        .map(({ departureMinutes, nextDay, ...train }) => train);
       renderTrains();
     }
 
