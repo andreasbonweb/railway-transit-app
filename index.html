@@ -172,7 +172,7 @@
       <div class="flex justify-between items-center mb-4">
         <div>
           <h1 class="text-lg font-bold text-white">Live Train Map</h1>
-          <p class="text-xs text-neutral-400">Dead Reckoning & RFID Station Tracker</p>
+          <p class="text-xs text-neutral-400">Dead Reckoning & RFID Station Tracker · <span id="mapLiveTime" class="text-purple-200 font-semibold">--:-- MYT</span></p>
         </div>
         <button onclick="simulateTrainMovement()" class="px-2.5 py-1.5 bg-neutral-600/30 hover:bg-neutral-600/50 border border-neutral-500/40 rounded-lg text-[11px] text-neutral-300 font-semibold flex items-center gap-1.5 transition">
           <i class="fa-solid fa-forward-step"></i> Simulate Next Stop
@@ -544,9 +544,13 @@
     function updateClock() {
       const now = new Date();
       const time = new Intl.DateTimeFormat('en-MY', {
-        timeZone: railwaySystem.timezone, hour: '2-digit', minute: '2-digit', hour12: false
+        timeZone: railwaySystem.timezone,
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
       }).format(now);
-      document.getElementById('liveClock').innerText = `${time} MYT`;
+      const formattedTime = `${time} MYT`;
+      document.getElementById('liveClock').innerText = formattedTime;
+      const mapLiveTime = document.getElementById('mapLiveTime');
+      if (mapLiveTime) mapLiveTime.innerText = formattedTime;
     }
 
     // Initialize App
