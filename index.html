@@ -350,11 +350,6 @@
             </div>
           </div>
 
-          <div>
-            <div class="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-2">All Stations by Distance</div>
-            <div id="stationDistanceList" class="space-y-1.5"></div>
-          </div>
-
           <button id="btnSetOrigin" onclick="setNearestAsOrigin()" class="w-full mt-3 bg-gradient-to-r from-neutral-700 to-neutral-700 hover:from-neutral-600 hover:to-neutral-600 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg active:scale-[0.98] transition flex items-center justify-center gap-2 text-xs">
             <i class="fa-solid fa-location-dot"></i>
             <span>Set Nearest as Departure Station</span>
@@ -600,36 +595,6 @@
       document.getElementById('gpsCoords').textContent =
         `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
 
-      const maxDist = ranked[ranked.length - 1].userDistKm || 1;
-      const listContainer = document.getElementById('stationDistanceList');
-      listContainer.innerHTML = ranked.map((st, i) => {
-        const pct = Math.max(5, (st.userDistKm / maxDist) * 100);
-        const isNearest = i === 0;
-        const distLabel = st.userDistKm < 1
-          ? `${Math.round(st.userDistKm * 1000)} m`
-          : `${st.userDistKm.toFixed(2)} km`;
-        return `
-          <div class="flex items-center gap-2 ${isNearest ? 'bg-blue-950/30 border border-blue-500/20' : 'bg-neutral-900/40 border border-neutral-800/60'} rounded-lg p-2 transition">
-            <div class="w-6 text-center">
-              ${isNearest
-                ? '<i class="fa-solid fa-location-dot text-blue-400 text-xs"></i>'
-                : `<span class="text-[10px] text-neutral-500 font-mono">${i + 1}</span>`
-              }
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-xs font-semibold ${isNearest ? 'text-blue-300' : 'text-neutral-300'} truncate">${st.name}</span>
-                <span class="text-[10px] ${isNearest ? 'text-blue-400 font-bold' : 'text-neutral-400'} ml-2 shrink-0">${distLabel}</span>
-              </div>
-              <div class="w-full bg-neutral-800 rounded-full h-1">
-                <div class="station-distance-bar h-1 rounded-full ${isNearest ? 'bg-blue-500' : 'bg-neutral-600'}" style="width: ${pct}%"></div>
-              </div>
-            </div>
-            <span class="text-[9px] text-neutral-500 font-mono shrink-0 w-8 text-right">${st.code}</span>
-          </div>
-        `;
-      }).join('');
-
       setLocationState('success');
       renderStationTrack();
       updateArrivalAlert();
@@ -865,9 +830,11 @@
       const baseEta = nextTrain ? nextTrain.etaMin : 5;
       const perStopMin = 2; // ~2 min avg between stations on the full line
 
-      const trainAtUserMin = baseEta + (userIdx * perStopMin);
+      const visibleStations = stations.slice(userIdx);
+      const trainAtUserMin = baseEta;
 
-      container.innerHTML = stations.map((st, i) => {
+      container.innerHTML = visibleStations.map((st, visibleIdx) => {
+        const i = userIdx + visibleIdx;
         const isUser = i === userIdx;
         const isBefore = i < userIdx;
         const trainAtStationMin = baseEta + (i * perStopMin);
@@ -943,8 +910,7 @@
         if (foundIdx >= 0) userIdx = foundIdx;
       }
 
-      const perStopMin = 2;
-      const trainArrivalMin = nextTrain.etaMin + (userIdx * perStopMin);
+      const trainArrivalMin = nextTrain.etaMin;
       const userStation = stations[userIdx];
 
       if (trainArrivalMin <= 3) {
