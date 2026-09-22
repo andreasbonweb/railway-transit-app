@@ -335,6 +335,11 @@
             </div>
           </div>
 
+          <div class="mb-3">
+            <div class="text-[10px] text-neutral-400 uppercase font-bold mb-2">All Stations by Distance</div>
+            <div id="nearestStationsList" class="space-y-1.5"></div>
+          </div>
+
           <div class="grid grid-cols-3 gap-2 text-center text-xs mb-3">
             <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
               <div class="text-[10px] text-neutral-400"><i class="fa-solid fa-person-walking mr-1"></i>Walk</div>
@@ -350,10 +355,6 @@
             </div>
           </div>
 
-          <button id="btnSetOrigin" onclick="setNearestAsOrigin()" class="w-full mt-3 bg-gradient-to-r from-neutral-700 to-neutral-700 hover:from-neutral-600 hover:to-neutral-600 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg active:scale-[0.98] transition flex items-center justify-center gap-2 text-xs">
-            <i class="fa-solid fa-location-dot"></i>
-            <span>Set Nearest as Departure Station</span>
-          </button>
         </div>
 
         <div id="locStateError" class="hidden fade-in-up">
@@ -538,8 +539,9 @@
       timezone: "Asia/Kuala_Lumpur",
       serviceStatus: null,
       serviceStatusSource: 'schedule',
-      currentTrainIndex: 0,
-      userLocation: null,
+  currentTrainIndex: 0,
+  selectedRoute: null,
+  userLocation: null,
       nearestStation: null,
       geoWatchId: null
     };
@@ -594,6 +596,16 @@
         accuracy < 50 ? `±${Math.round(accuracy)}m` : `±${(accuracy / 1000).toFixed(1)}km`;
       document.getElementById('gpsCoords').textContent =
         `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      document.getElementById('nearestStationsList').innerHTML = ranked.slice(0, 2).map((station, index) => `
+        <div class="flex items-center justify-between rounded-lg border ${index === 0 ? 'border-blue-500/30 bg-blue-950/20' : 'border-neutral-700/50 bg-neutral-900/50'} px-2.5 py-2">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="text-[10px] font-mono text-neutral-500">${index + 1}</span>
+            <span class="text-xs font-semibold ${index === 0 ? 'text-blue-300' : 'text-neutral-300'} truncate">${station.name}</span>
+            <span class="text-[9px] text-neutral-500 font-mono">${station.code}</span>
+          </div>
+          <span class="text-[10px] ${index === 0 ? 'text-blue-400' : 'text-neutral-400'} font-semibold shrink-0">${station.userDistKm < 1 ? `${Math.round(station.userDistKm * 1000)} m` : `${station.userDistKm.toFixed(2)} km`}</span>
+        </div>
+      `).join('');
 
       setLocationState('success');
       renderStationTrack();
@@ -808,6 +820,12 @@
       document.getElementById('resStops').innerText = `${stops} stations`;
       document.getElementById('resDistance').innerText = `${diffKm.toFixed(1)} km`;
 
+      railwaySystem.selectedRoute = { origin: orig, destination: dest };
+      renderStationTrack();
+
+      railwaySystem.selectedRoute = { origin: orig, destination: dest };
+      renderStationTrack();
+
       const card = document.getElementById('routeResultCard');
       card.classList.add('ring-2', 'ring-neutral-500');
       setTimeout(() => card.classList.remove('ring-2', 'ring-neutral-500'), 600);
@@ -819,29 +837,41 @@
     function renderStationTrack() {
       const container = document.getElementById('stationTrackContainer');
       const stations = railwaySystem.stations;
+      const routeOriginIdx = railwaySystem.selectedRoute
+        ? stations.findIndex(station => station.name === railwaySystem.selectedRoute.origin)
+        : -1;
+      const routeDestinationIdx = railwaySystem.selectedRoute
+        ? stations.findIndex(station => station.name === railwaySystem.selectedRoute.destination)
+        : -1;
 
       let userIdx = 0;
       if (railwaySystem.nearestStation) {
         const foundIdx = stations.findIndex(s => s.id === railwaySystem.nearestStation.id);
         if (foundIdx >= 0) userIdx = foundIdx;
       }
+      const startIdx = routeOriginIdx >= 0 ? routeOriginIdx : userIdx;
+      const endIdx = routeDestinationIdx >= startIdx ? routeDestinationIdx : stations.length - 1;
 
       const nextTrain = railwaySystem.trains[0];
       const baseEta = nextTrain ? nextTrain.etaMin : 5;
       const perStopMin = 2; // ~2 min avg between stations on the full line
 
-      const visibleStations = stations.slice(userIdx);
+      const visibleStations = stations.slice(startIdx, endIdx + 1);
       const trainAtUserMin = baseEta;
 
       container.innerHTML = visibleStations.map((st, visibleIdx) => {
-        const i = userIdx + visibleIdx;
-        const isUser = i === userIdx;
-        const isBefore = i < userIdx;
-        const trainAtStationMin = baseEta + (i * perStopMin);
+        const i = startIdx + visibleIdx;
+        const isUser = i === startIdx;
+        const isDeparture = railwaySystem.selectedRoute && i === startIdx;
+        const isArrival = railwaySystem.selectedRoute && i === endIdx;
+        const isBefore = i < startIdx;
+        const trainAtStationMin = baseEta + ((i - startIdx) * perStopMin);
 
         let timeLabel = '';
-        if (isUser) {
-          timeLabel = `<span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold"><i class="fa-solid fa-location-dot mr-1"></i>YOU · Train in ${trainAtUserMin} min</span>`;
+        if (isArrival) {
+          timeLabel = `<span class="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-200 font-bold">ARRIVAL</span>`;
+        } else if (isDeparture) {
+          timeLabel = `<span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold"><i class="fa-solid fa-location-dot mr-1"></i>DEPARTURE · Train in ${trainAtUserMin} min</span>`;
         } else if (isBefore) {
           timeLabel = `<span class="text-[10px] text-neutral-500">Train here in ${trainAtStationMin} min</span>`;
         } else {
@@ -871,7 +901,7 @@
         `;
       }).join('');
 
-      const userSt = stations[userIdx];
+      const userSt = stations[startIdx];
       document.getElementById('hudCurrentStation').innerText = userSt.name;
 
       if (nextTrain) {
