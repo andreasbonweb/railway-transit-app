@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    /* Mobile frame styling */
     body {
       background: radial-gradient(circle at top, #171225 0%, #050408 55%, #000000 100%);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -54,7 +53,6 @@
       border-radius: 2px;
     }
 
-    /* ── Location Card Styles ── */
     .location-card {
       position: relative;
       overflow: hidden;
@@ -110,7 +108,6 @@
 <body class="text-neutral-100 antialiased selection:bg-neutral-600">
 
   <div class="phone-container">
-    <!-- Top Status Bar -->
     <header class="pt-3 px-5 pb-2 flex justify-between items-center text-xs text-neutral-400 border-b border-neutral-800/80 bg-neutral-900/60 backdrop-blur sticky top-0 z-50">
       <span id="liveClock" class="font-bold text-neutral-200 text-sm">--:-- MYT</span>
       <div class="flex items-center gap-2">
@@ -139,12 +136,42 @@
             <div class="flex items-center bg-neutral-900/90 border border-neutral-700 rounded-xl px-3 py-2.5">
               <i class="fa-solid fa-location-dot text-neutral-400 text-sm mr-2.5"></i>
               <select id="selectOrigin" class="w-full bg-transparent text-sm text-white focus:outline-none cursor-pointer">
-                <option value="SS15" class="bg-neutral-800">SS15 (KJ29)</option>
-                <option value="Subang Jaya" class="bg-neutral-800">Subang Jaya (KJ28)</option>
-                <option value="Kelana Jaya" class="bg-neutral-800">Kelana Jaya (KJ24)</option>
-                <option value="Asia Jaya" class="bg-neutral-800">Asia Jaya (KJ21)</option>
-                <option value="Universiti" class="bg-neutral-800">Universiti (KJ19)</option>
+                <option value="Gombak" class="bg-neutral-800">Gombak (KJ1)</option>
+                <option value="Taman Melati" class="bg-neutral-800">Taman Melati (KJ2)</option>
+                <option value="Wangsa Maju" class="bg-neutral-800">Wangsa Maju (KJ3)</option>
+                <option value="Sri Rampai" class="bg-neutral-800">Sri Rampai (KJ4)</option>
+                <option value="Setiawangsa" class="bg-neutral-800">Setiawangsa (KJ5)</option>
+                <option value="Jelatek" class="bg-neutral-800">Jelatek (KJ6)</option>
+                <option value="Dato' Keramat" class="bg-neutral-800">Dato' Keramat (KJ7)</option>
+                <option value="Damai" class="bg-neutral-800">Damai (KJ8)</option>
+                <option value="Ampang Park" class="bg-neutral-800">Ampang Park (KJ9)</option>
+                <option value="KLCC" class="bg-neutral-800">KLCC (KJ10)</option>
+                <option value="Kampung Baru" class="bg-neutral-800">Kampung Baru (KJ11)</option>
+                <option value="Dang Wangi" class="bg-neutral-800">Dang Wangi (KJ12)</option>
+                <option value="Masjid Jamek" class="bg-neutral-800">Masjid Jamek (KJ13)</option>
+                <option value="Pasar Seni" class="bg-neutral-800">Pasar Seni (KJ14)</option>
                 <option value="KL Sentral" class="bg-neutral-800">KL Sentral (KJ15)</option>
+                <option value="Bangsar" class="bg-neutral-800">Bangsar (KJ16)</option>
+                <option value="Abdullah Hukum" class="bg-neutral-800">Abdullah Hukum (KJ17)</option>
+                <option value="Kerinchi" class="bg-neutral-800">Kerinchi (KJ18)</option>
+                <option value="Universiti" class="bg-neutral-800">Universiti (KJ19)</option>
+                <option value="Taman Paramount" class="bg-neutral-800">Taman Paramount (KJ20)</option>
+                <option value="Asia Jaya" class="bg-neutral-800">Asia Jaya (KJ21)</option>
+                <option value="Taman Bahagia" class="bg-neutral-800">Taman Bahagia (KJ22)</option>
+                <option value="Taman Jaya" class="bg-neutral-800">Taman Jaya (KJ23)</option>
+                <option value="Kelana Jaya" class="bg-neutral-800">Kelana Jaya (KJ24)</option>
+                <option value="Lembah Subang" class="bg-neutral-800">Lembah Subang (KJ25)</option>
+                <option value="Ara Damansara" class="bg-neutral-800">Ara Damansara (KJ26)</option>
+                <option value="Glenmarie" class="bg-neutral-800">Glenmarie (KJ27)</option>
+                <option value="Subang Jaya" class="bg-neutral-800">Subang Jaya (KJ28)</option>
+                <option value="SS15" class="bg-neutral-800" selected>SS15 (KJ29)</option>
+                <option value="USJ7" class="bg-neutral-800">USJ7 (KJ30)</option>
+                <option value="Taipan" class="bg-neutral-800">Taipan (KJ31)</option>
+                <option value="Wawasan" class="bg-neutral-800">Wawasan (KJ32)</option>
+                <option value="USJ21" class="bg-neutral-800">USJ21 (KJ33)</option>
+                <option value="Alam Megah" class="bg-neutral-800">Alam Megah (KJ34)</option>
+                <option value="Subang Alam" class="bg-neutral-800">Subang Alam (KJ35)</option>
+                <option value="Putra Heights" class="bg-neutral-800">Putra Heights (KJ37)</option>
               </select>
             </div>
           </div>
@@ -154,12 +181,42 @@
             <div class="flex items-center bg-neutral-900/90 border border-neutral-700 rounded-xl px-3 py-2.5">
               <i class="fa-solid fa-flag-checkered text-neutral-400 text-sm mr-2.5"></i>
               <select id="selectDest" class="w-full bg-transparent text-sm text-white focus:outline-none cursor-pointer">
+                <option value="Gombak" class="bg-neutral-800">Gombak (KJ1)</option>
+                <option value="Taman Melati" class="bg-neutral-800">Taman Melati (KJ2)</option>
+                <option value="Wangsa Maju" class="bg-neutral-800">Wangsa Maju (KJ3)</option>
+                <option value="Sri Rampai" class="bg-neutral-800">Sri Rampai (KJ4)</option>
+                <option value="Setiawangsa" class="bg-neutral-800">Setiawangsa (KJ5)</option>
+                <option value="Jelatek" class="bg-neutral-800">Jelatek (KJ6)</option>
+                <option value="Dato' Keramat" class="bg-neutral-800">Dato' Keramat (KJ7)</option>
+                <option value="Damai" class="bg-neutral-800">Damai (KJ8)</option>
+                <option value="Ampang Park" class="bg-neutral-800">Ampang Park (KJ9)</option>
+                <option value="KLCC" class="bg-neutral-800">KLCC (KJ10)</option>
+                <option value="Kampung Baru" class="bg-neutral-800">Kampung Baru (KJ11)</option>
+                <option value="Dang Wangi" class="bg-neutral-800">Dang Wangi (KJ12)</option>
+                <option value="Masjid Jamek" class="bg-neutral-800">Masjid Jamek (KJ13)</option>
+                <option value="Pasar Seni" class="bg-neutral-800">Pasar Seni (KJ14)</option>
                 <option value="KL Sentral" class="bg-neutral-800" selected>KL Sentral (KJ15)</option>
+                <option value="Bangsar" class="bg-neutral-800">Bangsar (KJ16)</option>
+                <option value="Abdullah Hukum" class="bg-neutral-800">Abdullah Hukum (KJ17)</option>
+                <option value="Kerinchi" class="bg-neutral-800">Kerinchi (KJ18)</option>
                 <option value="Universiti" class="bg-neutral-800">Universiti (KJ19)</option>
+                <option value="Taman Paramount" class="bg-neutral-800">Taman Paramount (KJ20)</option>
                 <option value="Asia Jaya" class="bg-neutral-800">Asia Jaya (KJ21)</option>
+                <option value="Taman Bahagia" class="bg-neutral-800">Taman Bahagia (KJ22)</option>
+                <option value="Taman Jaya" class="bg-neutral-800">Taman Jaya (KJ23)</option>
                 <option value="Kelana Jaya" class="bg-neutral-800">Kelana Jaya (KJ24)</option>
+                <option value="Lembah Subang" class="bg-neutral-800">Lembah Subang (KJ25)</option>
+                <option value="Ara Damansara" class="bg-neutral-800">Ara Damansara (KJ26)</option>
+                <option value="Glenmarie" class="bg-neutral-800">Glenmarie (KJ27)</option>
                 <option value="Subang Jaya" class="bg-neutral-800">Subang Jaya (KJ28)</option>
                 <option value="SS15" class="bg-neutral-800">SS15 (KJ29)</option>
+                <option value="USJ7" class="bg-neutral-800">USJ7 (KJ30)</option>
+                <option value="Taipan" class="bg-neutral-800">Taipan (KJ31)</option>
+                <option value="Wawasan" class="bg-neutral-800">Wawasan (KJ32)</option>
+                <option value="USJ21" class="bg-neutral-800">USJ21 (KJ33)</option>
+                <option value="Alam Megah" class="bg-neutral-800">Alam Megah (KJ34)</option>
+                <option value="Subang Alam" class="bg-neutral-800">Subang Alam (KJ35)</option>
+                <option value="Putra Heights" class="bg-neutral-800">Putra Heights (KJ37)</option>
               </select>
             </div>
           </div>
@@ -183,17 +240,17 @@
           </div>
           <div class="text-right">
             <span class="text-[10px] uppercase text-neutral-400 font-bold block">Est. Duration</span>
-            <span id="resDuration" class="text-base font-bold text-neutral-400">28 mins</span>
+            <span id="resDuration" class="text-base font-bold text-neutral-400">— mins</span>
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2 text-center pt-3 text-xs">
           <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
             <div class="text-[10px] text-neutral-400">Stops</div>
-            <div id="resStops" class="font-bold text-neutral-200 mt-0.5">7 stations</div>
+            <div id="resStops" class="font-bold text-neutral-200 mt-0.5">— stations</div>
           </div>
           <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
             <div class="text-[10px] text-neutral-400">Distance</div>
-            <div id="resDistance" class="font-bold text-neutral-200 mt-0.5">14.2 km</div>
+            <div id="resDistance" class="font-bold text-neutral-200 mt-0.5">— km</div>
           </div>
           <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
             <div class="text-[10px] text-neutral-400">Interchange</div>
@@ -203,17 +260,12 @@
       </div>
 
       <div>
-        <div class="flex justify-between items-center mb-3">
-          <h2 class="text-sm font-bold text-white uppercase tracking-wider">Next Trains</h2>
-          <span id="serviceStatusBadge" class="text-[11px] text-neutral-400 flex items-center gap-1 font-semibold" title="Service status source">
-            <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span> Live Telemetry · MYT
-          </span>
-        </div>
+        <h2 class="text-sm font-bold text-white uppercase tracking-wider mb-3">Next Trains</h2>
         <div id="trainList" class="space-y-2.5"></div>
       </div>
     </main>
 
-    <!-- TAB 2: LIVE MAP SCREEN — GPS Station Finder & Live Tracker -->
+    <!-- TAB 2: LIVE MAP SCREEN -->
     <main id="tab-map" class="screen hidden flex-1 p-5 pb-24 overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
         <div>
@@ -222,7 +274,6 @@
         </div>
       </div>
 
-      <!-- NEAREST STATION — GPS LOCATION CARD -->
       <div id="locationCard" class="location-card bg-gradient-to-br from-blue-950/30 to-neutral-900/80 border border-blue-500/25 rounded-2xl p-4 mb-4 shadow-lg shadow-blue-950/10">
         <div id="locStateIdle">
           <div class="flex items-center gap-3">
@@ -327,7 +378,6 @@
         </div>
       </div>
 
-      <!-- Train HUD Card — dynamic -->
       <div class="bg-gradient-to-br from-neutral-950/80 to-neutral-900 border border-neutral-500/40 rounded-2xl p-4 mb-4 shadow-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -355,7 +405,6 @@
         </div>
       </div>
 
-      <!-- Station Progression Tracker -->
       <div class="bg-neutral-800/40 border border-neutral-700/60 rounded-2xl p-4">
         <div class="text-xs font-bold text-neutral-300 mb-3 uppercase tracking-wider">Line Progression · Live ETA</div>
         <div class="train-track space-y-4 text-xs" id="stationTrackContainer"></div>
@@ -374,7 +423,6 @@
         </span>
       </div>
 
-      <!-- Arrival Banner — synced with live train + GPS data -->
       <div id="arrivalAlertCard" class="bg-green-950/20 border border-green-500/35 rounded-2xl p-4 mb-3 shadow-lg shadow-green-950/10">
         <div class="flex items-start gap-3">
           <div class="w-9 h-9 rounded-xl bg-green-500/15 text-green-400 flex items-center justify-center shrink-0 text-base">
@@ -391,7 +439,6 @@
         </div>
       </div>
 
-      <!-- Disruption Delay Alert -->
       <div class="bg-red-950/20 border border-red-500/40 rounded-2xl p-4 mb-4 shadow-lg shadow-red-950/10">
         <div class="flex items-start gap-3">
           <div class="w-9 h-9 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center shrink-0 text-base">
@@ -449,17 +496,47 @@
 
   <script>
     // ══════════════════════════════════════════════════════════
-    // System Data — stations include GPS coordinates
+    // Full LRT Kelana Jaya Line — 36 stations (KJ1–KJ37)
+    // with GPS coordinates and cumulative distance from Gombak
     // ══════════════════════════════════════════════════════════
     const railwaySystem = {
       stations: [
-        { id: 1, name: "SS15",         code: "KJ29", distanceKm: 0,    lat: 3.0778, lng: 101.5872 },
-        { id: 2, name: "Subang Jaya",  code: "KJ28", distanceKm: 2.1,  lat: 3.0843, lng: 101.5866 },
-        { id: 3, name: "Glenmarie",    code: "KJ27", distanceKm: 4.8,  lat: 3.0905, lng: 101.5938 },
-        { id: 4, name: "Kelana Jaya",  code: "KJ24", distanceKm: 8.2,  lat: 3.1064, lng: 101.6046 },
-        { id: 5, name: "Asia Jaya",    code: "KJ21", distanceKm: 11.5, lat: 3.1087, lng: 101.6458 },
-        { id: 6, name: "Universiti",   code: "KJ19", distanceKm: 13.1, lat: 3.1167, lng: 101.6552 },
-        { id: 7, name: "KL Sentral",   code: "KJ15", distanceKm: 18.0, lat: 3.1343, lng: 101.6863 }
+        { id: 1,  name: "Gombak",          code: "KJ1",  distanceKm: 0.0,  lat: 3.2631, lng: 101.6864 },
+        { id: 2,  name: "Taman Melati",    code: "KJ2",  distanceKm: 1.8,  lat: 3.2505, lng: 101.6917 },
+        { id: 3,  name: "Wangsa Maju",     code: "KJ3",  distanceKm: 3.2,  lat: 3.2371, lng: 101.6943 },
+        { id: 4,  name: "Sri Rampai",      code: "KJ4",  distanceKm: 4.5,  lat: 3.2226, lng: 101.6962 },
+        { id: 5,  name: "Setiawangsa",     code: "KJ5",  distanceKm: 6.0,  lat: 3.2112, lng: 101.6989 },
+        { id: 6,  name: "Jelatek",         code: "KJ6",  distanceKm: 7.5,  lat: 3.1963, lng: 101.7000 },
+        { id: 7,  name: "Dato' Keramat",   code: "KJ7",  distanceKm: 9.0,  lat: 3.1833, lng: 101.7022 },
+        { id: 8,  name: "Damai",           code: "KJ8",  distanceKm: 10.3, lat: 3.1723, lng: 101.7044 },
+        { id: 9,  name: "Ampang Park",     code: "KJ9",  distanceKm: 11.8, lat: 3.1609, lng: 101.7189 },
+        { id: 10, name: "KLCC",            code: "KJ10", distanceKm: 13.2, lat: 3.1558, lng: 101.7133 },
+        { id: 11, name: "Kampung Baru",    code: "KJ11", distanceKm: 14.2, lat: 3.1525, lng: 101.7029 },
+        { id: 12, name: "Dang Wangi",      code: "KJ12", distanceKm: 15.2, lat: 3.1504, lng: 101.6981 },
+        { id: 13, name: "Masjid Jamek",    code: "KJ13", distanceKm: 16.0, lat: 3.1491, lng: 101.6956 },
+        { id: 14, name: "Pasar Seni",      code: "KJ14", distanceKm: 17.0, lat: 3.1421, lng: 101.6944 },
+        { id: 15, name: "KL Sentral",      code: "KJ15", distanceKm: 18.5, lat: 3.1343, lng: 101.6863 },
+        { id: 16, name: "Bangsar",         code: "KJ16", distanceKm: 20.0, lat: 3.1245, lng: 101.6802 },
+        { id: 17, name: "Abdullah Hukum",  code: "KJ17", distanceKm: 21.2, lat: 3.1222, lng: 101.6728 },
+        { id: 18, name: "Kerinchi",        code: "KJ18", distanceKm: 22.5, lat: 3.1170, lng: 101.6649 },
+        { id: 19, name: "Universiti",      code: "KJ19", distanceKm: 24.0, lat: 3.1167, lng: 101.6552 },
+        { id: 20, name: "Taman Paramount", code: "KJ20", distanceKm: 25.2, lat: 3.1099, lng: 101.6497 },
+        { id: 21, name: "Asia Jaya",       code: "KJ21", distanceKm: 26.5, lat: 3.1087, lng: 101.6458 },
+        { id: 22, name: "Taman Bahagia",   code: "KJ22", distanceKm: 27.5, lat: 3.1079, lng: 101.6381 },
+        { id: 23, name: "Taman Jaya",      code: "KJ23", distanceKm: 28.5, lat: 3.1072, lng: 101.6286 },
+        { id: 24, name: "Kelana Jaya",     code: "KJ24", distanceKm: 30.0, lat: 3.1064, lng: 101.6046 },
+        { id: 25, name: "Lembah Subang",   code: "KJ25", distanceKm: 31.5, lat: 3.1007, lng: 101.5984 },
+        { id: 26, name: "Ara Damansara",   code: "KJ26", distanceKm: 33.0, lat: 3.0966, lng: 101.5944 },
+        { id: 27, name: "Glenmarie",       code: "KJ27", distanceKm: 34.5, lat: 3.0905, lng: 101.5938 },
+        { id: 28, name: "Subang Jaya",     code: "KJ28", distanceKm: 36.0, lat: 3.0843, lng: 101.5866 },
+        { id: 29, name: "SS15",            code: "KJ29", distanceKm: 37.5, lat: 3.0778, lng: 101.5872 },
+        { id: 30, name: "USJ7",            code: "KJ30", distanceKm: 38.5, lat: 3.0716, lng: 101.5844 },
+        { id: 31, name: "Taipan",          code: "KJ31", distanceKm: 39.5, lat: 3.0649, lng: 101.5825 },
+        { id: 32, name: "Wawasan",         code: "KJ32", distanceKm: 40.5, lat: 3.0584, lng: 101.5808 },
+        { id: 33, name: "USJ21",           code: "KJ33", distanceKm: 41.5, lat: 3.0516, lng: 101.5785 },
+        { id: 34, name: "Alam Megah",      code: "KJ34", distanceKm: 42.5, lat: 3.0448, lng: 101.5766 },
+        { id: 35, name: "Subang Alam",     code: "KJ35", distanceKm: 43.5, lat: 3.0389, lng: 101.5743 },
+        { id: 36, name: "Putra Heights",   code: "KJ37", distanceKm: 46.4, lat: 3.0285, lng: 101.5675 }
       ],
       trains: [],
       lrtSchedule: { firstService: 5 * 60 + 30, lastService: 23 * 60 + 30, frequency: 15 },
@@ -471,6 +548,7 @@
       nearestStation: null,
       geoWatchId: null
     };
+
     // ══════════════════════════════════════════════════════════
     // GEOLOCATION — Nearest Station Finder
     // ══════════════════════════════════════════════════════════
@@ -553,8 +631,6 @@
       }).join('');
 
       setLocationState('success');
-
-      // Re-render station track and alerts with new location
       renderStationTrack();
       updateArrivalAlert();
     }
@@ -580,9 +656,7 @@
       }
 
       setLocationState('loading');
-
       const geoOptions = { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 };
-
       navigator.geolocation.getCurrentPosition(updateLocationUI, handleLocationError, geoOptions);
 
       if (railwaySystem.geoWatchId !== null) {
@@ -611,7 +685,7 @@
     }
 
     // ══════════════════════════════════════════════════════════
-    // TAB SWITCHER — auto-request location on Live Map tab
+    // TAB SWITCHER
     // ══════════════════════════════════════════════════════════
 
     function switchTab(tabName) {
@@ -672,15 +746,6 @@
         railwaySystem.serviceStatus = null;
         railwaySystem.serviceStatusSource = 'schedule';
       }
-      updateServiceStatusBadge();
-    }
-
-    function updateServiceStatusBadge() {
-      const badge = document.getElementById('serviceStatusBadge');
-      if (!badge) return;
-      const isApi = railwaySystem.serviceStatusSource === 'api';
-      badge.innerHTML = `<span class="w-2 h-2 rounded-full ${isApi ? 'bg-green-500' : 'bg-yellow-500'} pulse-dot"></span> ${isApi ? 'Live API · MYT' : 'Timetable · MYT'}`;
-      badge.title = isApi ? 'Live service status from api.mtrec.name.my' : 'Live API unavailable; showing scheduled LRT times';
     }
 
     function getLiveStatus(index) {
@@ -712,7 +777,7 @@
         const etaMin = minutesUntilDeparture + liveStatus.delay;
         return {
           id: `TR-${204 + index * 4}`,
-          route: 'SS15 -> KL Sentral',
+          route: 'Gombak -> Putra Heights',
           departure: formatScheduleTime(scheduleMinutes),
           etaMin,
           status: liveStatus.label,
@@ -728,7 +793,6 @@
       updateArrivalAlert();
     }
 
-    // Render Trains List in Search Tab
     function renderTrains() {
       const container = document.getElementById('trainList');
       container.innerHTML = railwaySystem.trains.map((t) => `
@@ -744,7 +808,7 @@
                   ${t.status}
                 </span>
               </div>
-              <span class="text-[11px] text-neutral-400 font-mono">${t.id} &bull; To KL Sentral</span>
+              <span class="text-[11px] text-neutral-400 font-mono">${t.id} &bull; ${t.route}</span>
             </div>
           </div>
           <div class="text-right">
@@ -755,7 +819,6 @@
       `).join('');
     }
 
-    // Dynamic Route Calculation
     function calculateRoute() {
       const orig = document.getElementById('selectOrigin').value;
       const dest = document.getElementById('selectDest').value;
@@ -767,12 +830,14 @@
 
       document.getElementById('resOriginText').innerText = orig;
       document.getElementById('resDestText').innerText = dest;
-      
+
       const st1 = railwaySystem.stations.find(s => s.name === orig) || { distanceKm: 0 };
       const st2 = railwaySystem.stations.find(s => s.name === dest) || { distanceKm: 15 };
       const diffKm = Math.abs(st2.distanceKm - st1.distanceKm) || 12.4;
-      const estMins = Math.round(diffKm * 1.8) + 4;
-      const stops = Math.max(2, Math.round(diffKm / 2.2));
+      const estMins = Math.round(diffKm * 1.5) + 3; // ~2 min/station avg
+      const idx1 = railwaySystem.stations.findIndex(s => s.name === orig);
+      const idx2 = railwaySystem.stations.findIndex(s => s.name === dest);
+      const stops = idx1 >= 0 && idx2 >= 0 ? Math.abs(idx2 - idx1) : Math.max(2, Math.round(diffKm / 1.3));
 
       document.getElementById('resDuration').innerText = `${estMins} mins`;
       document.getElementById('resStops').innerText = `${stops} stations`;
@@ -785,27 +850,21 @@
 
     // ══════════════════════════════════════════════════════════
     // STATION TRACK — GPS-aware with real train ETAs
-    // Uses nearest station from GPS + next train schedule data
-    // to show when the train reaches each station in real time.
     // ══════════════════════════════════════════════════════════
     function renderStationTrack() {
       const container = document.getElementById('stationTrackContainer');
       const stations = railwaySystem.stations;
 
-      // Determine user's nearest station from GPS (fallback to first station)
       let userIdx = 0;
       if (railwaySystem.nearestStation) {
         const foundIdx = stations.findIndex(s => s.id === railwaySystem.nearestStation.id);
         if (foundIdx >= 0) userIdx = foundIdx;
       }
 
-      // Get next train timing
       const nextTrain = railwaySystem.trains[0];
       const baseEta = nextTrain ? nextTrain.etaMin : 5;
-      const perStopMin = 3; // avg minutes between consecutive stations
+      const perStopMin = 2; // ~2 min avg between stations on the full line
 
-      // Train departs station 0 (SS15) in baseEta minutes,
-      // so it reaches station i in: baseEta + (i * perStopMin)
       const trainAtUserMin = baseEta + (userIdx * perStopMin);
 
       container.innerHTML = stations.map((st, i) => {
@@ -813,7 +872,6 @@
         const isBefore = i < userIdx;
         const trainAtStationMin = baseEta + (i * perStopMin);
 
-        // Time label for each station
         let timeLabel = '';
         if (isUser) {
           timeLabel = `<span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold"><i class="fa-solid fa-location-dot mr-1"></i>YOU · Train in ${trainAtUserMin} min</span>`;
@@ -846,7 +904,6 @@
         `;
       }).join('');
 
-      // Update HUD card
       const userSt = stations[userIdx];
       document.getElementById('hudCurrentStation').innerText = userSt.name;
 
@@ -886,11 +943,10 @@
         if (foundIdx >= 0) userIdx = foundIdx;
       }
 
-      const perStopMin = 3;
+      const perStopMin = 2;
       const trainArrivalMin = nextTrain.etaMin + (userIdx * perStopMin);
       const userStation = stations[userIdx];
 
-      // Card styling based on urgency
       if (trainArrivalMin <= 3) {
         statusEl.textContent = `ARRIVING NOW · ${nextTrain.status}`;
         cardEl.className = 'bg-green-950/30 border border-green-400/50 rounded-2xl p-4 mb-3 shadow-lg shadow-green-950/20';
@@ -910,7 +966,6 @@
       detailEl.innerHTML = `Platform 1 &bull; ${userStation.code} &bull; ${nextTrain.status}`;
     }
 
-    // Real-Time Clock
     function updateClock() {
       const now = new Date();
       const time = new Intl.DateTimeFormat('en-MY', {
@@ -923,7 +978,6 @@
       if (mapLiveTime) mapLiveTime.innerText = formattedTime;
     }
 
-    // Initialize App
     window.addEventListener('DOMContentLoaded', () => {
       refreshTrainSchedule();
       fetchServiceStatus().then(refreshTrainSchedule);
