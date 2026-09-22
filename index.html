@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    /* Mobile frame styling */
     body {
       background: radial-gradient(circle at top, #171225 0%, #050408 55%, #000000 100%);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -53,12 +52,62 @@
       background: #555555;
       border-radius: 2px;
     }
+
+    .location-card {
+      position: relative;
+      overflow: hidden;
+    }
+    .location-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .location-ping {
+      animation: locationPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+    @keyframes locationPing {
+      0% { transform: scale(1); opacity: 0.8; }
+      75%, 100% { transform: scale(2.2); opacity: 0; }
+    }
+    .location-breathe {
+      animation: breathe 3s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.25); }
+      50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+    }
+    .shimmer-btn {
+      position: relative;
+      overflow: hidden;
+    }
+    .shimmer-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      animation: shimmer 2.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.4s ease-out forwards;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .station-distance-bar {
+      transition: width 0.6s ease-out;
+    }
   </style>
 </head>
 <body class="text-neutral-100 antialiased selection:bg-neutral-600">
 
   <div class="phone-container">
-    <!-- Top Status Bar -->
     <header class="pt-3 px-5 pb-2 flex justify-between items-center text-xs text-neutral-400 border-b border-neutral-800/80 bg-neutral-900/60 backdrop-blur sticky top-0 z-50">
       <span id="liveClock" class="font-bold text-neutral-200 text-sm">--:-- MYT</span>
       <div class="flex items-center gap-2">
@@ -68,7 +117,7 @@
       </div>
     </header>
 
-    <!-- TAB 1: SEARCH SCREEN (Person 2 Wireframe 1 + Person 4 DFD 1.1-1.4) -->
+    <!-- TAB 1: SEARCH SCREEN -->
     <main id="tab-search" class="screen flex-1 p-5 pb-24 overflow-y-auto">
       <div class="flex items-center gap-2 mb-4">
         <div class="w-8 h-8 rounded-lg bg-purple-700/70 border border-purple-400/30 flex items-center justify-center text-purple-50 shadow-lg shadow-purple-900/40">
@@ -80,7 +129,6 @@
         </div>
       </div>
 
-      <!-- Station Inputs Matching P2 Wireframe -->
       <div class="bg-neutral-800/70 border border-neutral-700/60 rounded-2xl p-4 shadow-xl mb-5 backdrop-blur">
         <div class="space-y-3">
           <div class="relative">
@@ -88,12 +136,42 @@
             <div class="flex items-center bg-neutral-900/90 border border-neutral-700 rounded-xl px-3 py-2.5">
               <i class="fa-solid fa-location-dot text-neutral-400 text-sm mr-2.5"></i>
               <select id="selectOrigin" class="w-full bg-transparent text-sm text-white focus:outline-none cursor-pointer">
-                <option value="SS15" class="bg-neutral-800">SS15 (KJ29)</option>
-                <option value="Subang Jaya" class="bg-neutral-800">Subang Jaya (KJ28)</option>
-                <option value="Kelana Jaya" class="bg-neutral-800">Kelana Jaya (KJ24)</option>
-                <option value="Asia Jaya" class="bg-neutral-800">Asia Jaya (KJ21)</option>
-                <option value="Universiti" class="bg-neutral-800">Universiti (KJ19)</option>
+                <option value="Gombak" class="bg-neutral-800">Gombak (KJ1)</option>
+                <option value="Taman Melati" class="bg-neutral-800">Taman Melati (KJ2)</option>
+                <option value="Wangsa Maju" class="bg-neutral-800">Wangsa Maju (KJ3)</option>
+                <option value="Sri Rampai" class="bg-neutral-800">Sri Rampai (KJ4)</option>
+                <option value="Setiawangsa" class="bg-neutral-800">Setiawangsa (KJ5)</option>
+                <option value="Jelatek" class="bg-neutral-800">Jelatek (KJ6)</option>
+                <option value="Dato' Keramat" class="bg-neutral-800">Dato' Keramat (KJ7)</option>
+                <option value="Damai" class="bg-neutral-800">Damai (KJ8)</option>
+                <option value="Ampang Park" class="bg-neutral-800">Ampang Park (KJ9)</option>
+                <option value="KLCC" class="bg-neutral-800">KLCC (KJ10)</option>
+                <option value="Kampung Baru" class="bg-neutral-800">Kampung Baru (KJ11)</option>
+                <option value="Dang Wangi" class="bg-neutral-800">Dang Wangi (KJ12)</option>
+                <option value="Masjid Jamek" class="bg-neutral-800">Masjid Jamek (KJ13)</option>
+                <option value="Pasar Seni" class="bg-neutral-800">Pasar Seni (KJ14)</option>
                 <option value="KL Sentral" class="bg-neutral-800">KL Sentral (KJ15)</option>
+                <option value="Bangsar" class="bg-neutral-800">Bangsar (KJ16)</option>
+                <option value="Abdullah Hukum" class="bg-neutral-800">Abdullah Hukum (KJ17)</option>
+                <option value="Kerinchi" class="bg-neutral-800">Kerinchi (KJ18)</option>
+                <option value="Universiti" class="bg-neutral-800">Universiti (KJ19)</option>
+                <option value="Taman Paramount" class="bg-neutral-800">Taman Paramount (KJ20)</option>
+                <option value="Asia Jaya" class="bg-neutral-800">Asia Jaya (KJ21)</option>
+                <option value="Taman Bahagia" class="bg-neutral-800">Taman Bahagia (KJ22)</option>
+                <option value="Taman Jaya" class="bg-neutral-800">Taman Jaya (KJ23)</option>
+                <option value="Kelana Jaya" class="bg-neutral-800">Kelana Jaya (KJ24)</option>
+                <option value="Lembah Subang" class="bg-neutral-800">Lembah Subang (KJ25)</option>
+                <option value="Ara Damansara" class="bg-neutral-800">Ara Damansara (KJ26)</option>
+                <option value="Glenmarie" class="bg-neutral-800">Glenmarie (KJ27)</option>
+                <option value="Subang Jaya" class="bg-neutral-800">Subang Jaya (KJ28)</option>
+                <option value="SS15" class="bg-neutral-800" selected>SS15 (KJ29)</option>
+                <option value="USJ7" class="bg-neutral-800">USJ7 (KJ30)</option>
+                <option value="Taipan" class="bg-neutral-800">Taipan (KJ31)</option>
+                <option value="Wawasan" class="bg-neutral-800">Wawasan (KJ32)</option>
+                <option value="USJ21" class="bg-neutral-800">USJ21 (KJ33)</option>
+                <option value="Alam Megah" class="bg-neutral-800">Alam Megah (KJ34)</option>
+                <option value="Subang Alam" class="bg-neutral-800">Subang Alam (KJ35)</option>
+                <option value="Putra Heights" class="bg-neutral-800">Putra Heights (KJ37)</option>
               </select>
             </div>
           </div>
@@ -103,12 +181,42 @@
             <div class="flex items-center bg-neutral-900/90 border border-neutral-700 rounded-xl px-3 py-2.5">
               <i class="fa-solid fa-flag-checkered text-neutral-400 text-sm mr-2.5"></i>
               <select id="selectDest" class="w-full bg-transparent text-sm text-white focus:outline-none cursor-pointer">
+                <option value="Gombak" class="bg-neutral-800">Gombak (KJ1)</option>
+                <option value="Taman Melati" class="bg-neutral-800">Taman Melati (KJ2)</option>
+                <option value="Wangsa Maju" class="bg-neutral-800">Wangsa Maju (KJ3)</option>
+                <option value="Sri Rampai" class="bg-neutral-800">Sri Rampai (KJ4)</option>
+                <option value="Setiawangsa" class="bg-neutral-800">Setiawangsa (KJ5)</option>
+                <option value="Jelatek" class="bg-neutral-800">Jelatek (KJ6)</option>
+                <option value="Dato' Keramat" class="bg-neutral-800">Dato' Keramat (KJ7)</option>
+                <option value="Damai" class="bg-neutral-800">Damai (KJ8)</option>
+                <option value="Ampang Park" class="bg-neutral-800">Ampang Park (KJ9)</option>
+                <option value="KLCC" class="bg-neutral-800">KLCC (KJ10)</option>
+                <option value="Kampung Baru" class="bg-neutral-800">Kampung Baru (KJ11)</option>
+                <option value="Dang Wangi" class="bg-neutral-800">Dang Wangi (KJ12)</option>
+                <option value="Masjid Jamek" class="bg-neutral-800">Masjid Jamek (KJ13)</option>
+                <option value="Pasar Seni" class="bg-neutral-800">Pasar Seni (KJ14)</option>
                 <option value="KL Sentral" class="bg-neutral-800" selected>KL Sentral (KJ15)</option>
+                <option value="Bangsar" class="bg-neutral-800">Bangsar (KJ16)</option>
+                <option value="Abdullah Hukum" class="bg-neutral-800">Abdullah Hukum (KJ17)</option>
+                <option value="Kerinchi" class="bg-neutral-800">Kerinchi (KJ18)</option>
                 <option value="Universiti" class="bg-neutral-800">Universiti (KJ19)</option>
+                <option value="Taman Paramount" class="bg-neutral-800">Taman Paramount (KJ20)</option>
                 <option value="Asia Jaya" class="bg-neutral-800">Asia Jaya (KJ21)</option>
+                <option value="Taman Bahagia" class="bg-neutral-800">Taman Bahagia (KJ22)</option>
+                <option value="Taman Jaya" class="bg-neutral-800">Taman Jaya (KJ23)</option>
                 <option value="Kelana Jaya" class="bg-neutral-800">Kelana Jaya (KJ24)</option>
+                <option value="Lembah Subang" class="bg-neutral-800">Lembah Subang (KJ25)</option>
+                <option value="Ara Damansara" class="bg-neutral-800">Ara Damansara (KJ26)</option>
+                <option value="Glenmarie" class="bg-neutral-800">Glenmarie (KJ27)</option>
                 <option value="Subang Jaya" class="bg-neutral-800">Subang Jaya (KJ28)</option>
                 <option value="SS15" class="bg-neutral-800">SS15 (KJ29)</option>
+                <option value="USJ7" class="bg-neutral-800">USJ7 (KJ30)</option>
+                <option value="Taipan" class="bg-neutral-800">Taipan (KJ31)</option>
+                <option value="Wawasan" class="bg-neutral-800">Wawasan (KJ32)</option>
+                <option value="USJ21" class="bg-neutral-800">USJ21 (KJ33)</option>
+                <option value="Alam Megah" class="bg-neutral-800">Alam Megah (KJ34)</option>
+                <option value="Subang Alam" class="bg-neutral-800">Subang Alam (KJ35)</option>
+                <option value="Putra Heights" class="bg-neutral-800">Putra Heights (KJ37)</option>
               </select>
             </div>
           </div>
@@ -120,7 +228,6 @@
         </button>
       </div>
 
-      <!-- Live Route Result Card -->
       <div id="routeResultCard" class="bg-neutral-800/40 border border-neutral-500/30 rounded-2xl p-4 mb-5">
         <div class="flex justify-between items-start pb-3 border-b border-neutral-700/60">
           <div>
@@ -133,17 +240,17 @@
           </div>
           <div class="text-right">
             <span class="text-[10px] uppercase text-neutral-400 font-bold block">Est. Duration</span>
-            <span id="resDuration" class="text-base font-bold text-neutral-400">28 mins</span>
+            <span id="resDuration" class="text-base font-bold text-neutral-400">— mins</span>
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2 text-center pt-3 text-xs">
           <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
             <div class="text-[10px] text-neutral-400">Stops</div>
-            <div id="resStops" class="font-bold text-neutral-200 mt-0.5">7 stations</div>
+            <div id="resStops" class="font-bold text-neutral-200 mt-0.5">— stations</div>
           </div>
           <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
             <div class="text-[10px] text-neutral-400">Distance</div>
-            <div id="resDistance" class="font-bold text-neutral-200 mt-0.5">14.2 km</div>
+            <div id="resDistance" class="font-bold text-neutral-200 mt-0.5">— km</div>
           </div>
           <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
             <div class="text-[10px] text-neutral-400">Interchange</div>
@@ -152,34 +259,125 @@
         </div>
       </div>
 
-      <!-- Next Trains Schedule (Person 2 Wireframe 1 & ERD Schedules Table) -->
       <div>
-        <div class="flex justify-between items-center mb-3">
-          <h2 class="text-sm font-bold text-white uppercase tracking-wider">Next Trains</h2>
-          <span id="serviceStatusBadge" class="text-[11px] text-neutral-400 flex items-center gap-1 font-semibold" title="Service status source">
-            <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span> Live Telemetry · MYT
-          </span>
-        </div>
-
-        <div id="trainList" class="space-y-2.5">
-          <!-- Populated by JS -->
-        </div>
+        <h2 class="text-sm font-bold text-white uppercase tracking-wider mb-3">Next Trains</h2>
+        <div id="trainList" class="space-y-2.5"></div>
       </div>
     </main>
 
-    <!-- TAB 2: LIVE MAP SCREEN (Person 2 Wireframe 2 + Dead Reckoning Simulation) -->
+    <!-- TAB 2: LIVE MAP SCREEN -->
     <main id="tab-map" class="screen hidden flex-1 p-5 pb-24 overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
         <div>
           <h1 class="text-lg font-bold text-white">Live Train Map</h1>
-          <p class="text-xs text-neutral-400">Dead Reckoning & RFID Station Tracker · <span id="mapLiveTime" class="text-purple-200 font-semibold">--:-- MYT</span></p>
+          <p class="text-xs text-neutral-400">GPS Station Finder & Live Tracker · <span id="mapLiveTime" class="text-purple-200 font-semibold">--:-- MYT</span></p>
         </div>
-        <button onclick="simulateTrainMovement()" class="px-2.5 py-1.5 bg-neutral-600/30 hover:bg-neutral-600/50 border border-neutral-500/40 rounded-lg text-[11px] text-neutral-300 font-semibold flex items-center gap-1.5 transition">
-          <i class="fa-solid fa-forward-step"></i> Simulate Next Stop
-        </button>
       </div>
 
-      <!-- Current Active Train HUD Card (From Wireframe 2) -->
+      <div id="locationCard" class="location-card bg-gradient-to-br from-blue-950/30 to-neutral-900/80 border border-blue-500/25 rounded-2xl p-4 mb-4 shadow-lg shadow-blue-950/10">
+        <div id="locStateIdle">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/25 text-blue-400 flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-location-crosshairs text-lg"></i>
+            </div>
+            <div class="flex-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400">Find Nearest Station</span>
+              <p class="text-xs text-neutral-300 mt-0.5">Allow location access to find the closest LRT station to you</p>
+            </div>
+          </div>
+          <button onclick="requestUserLocation()" class="shimmer-btn w-full mt-3 bg-gradient-to-r from-blue-600/80 to-blue-700/80 hover:from-blue-500/90 hover:to-blue-600/90 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg shadow-blue-900/30 active:scale-[0.98] transition flex items-center justify-center gap-2 text-sm">
+            <i class="fa-solid fa-location-arrow"></i>
+            <span>Use My Location</span>
+          </button>
+        </div>
+
+        <div id="locStateLoading" class="hidden">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/25 text-blue-400 flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-spinner fa-spin text-lg"></i>
+            </div>
+            <div>
+              <span class="text-sm font-bold text-white">Acquiring GPS Signal…</span>
+              <p class="text-xs text-neutral-400 mt-0.5">Requesting location from your device</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="locStateSuccess" class="hidden fade-in-up">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="relative">
+                <div class="w-8 h-8 rounded-full bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-blue-400 location-breathe">
+                  <i class="fa-solid fa-location-dot text-sm"></i>
+                </div>
+                <div class="absolute inset-0 rounded-full border border-blue-400/30 location-ping"></div>
+              </div>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400">Your Location · Live GPS</span>
+            </div>
+            <button onclick="requestUserLocation()" class="text-[10px] text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1 transition" title="Refresh location">
+              <i class="fa-solid fa-rotate"></i> Refresh
+            </button>
+          </div>
+
+          <div class="bg-neutral-900/70 border border-neutral-700/50 rounded-xl p-3 mb-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-neutral-400 uppercase font-bold">Nearest Station</span>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <span id="nearestStationName" class="text-base font-bold text-white">—</span>
+                  <span id="nearestStationCode" class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/15 border border-blue-500/30 text-blue-300 font-mono font-semibold">—</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] text-neutral-400 uppercase font-bold">Distance</span>
+                <div id="nearestStationDist" class="text-base font-bold text-blue-400 mt-0.5">— km</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-center text-xs mb-3">
+            <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
+              <div class="text-[10px] text-neutral-400"><i class="fa-solid fa-person-walking mr-1"></i>Walk</div>
+              <div id="nearestWalkTime" class="font-bold text-neutral-200 mt-0.5">— min</div>
+            </div>
+            <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
+              <div class="text-[10px] text-neutral-400"><i class="fa-solid fa-satellite-dish mr-1"></i>Accuracy</div>
+              <div id="gpsAccuracy" class="font-bold text-neutral-200 mt-0.5">—</div>
+            </div>
+            <div class="bg-neutral-900/60 rounded-lg p-2 border border-neutral-700/40">
+              <div class="text-[10px] text-neutral-400"><i class="fa-solid fa-compass mr-1"></i>Coords</div>
+              <div id="gpsCoords" class="font-bold text-neutral-200 mt-0.5 text-[9px]">—</div>
+            </div>
+          </div>
+
+          <div>
+            <div class="text-[10px] font-bold text-neutral-400 uppercase tracking-wider mb-2">All Stations by Distance</div>
+            <div id="stationDistanceList" class="space-y-1.5"></div>
+          </div>
+
+          <button id="btnSetOrigin" onclick="setNearestAsOrigin()" class="w-full mt-3 bg-gradient-to-r from-neutral-700 to-neutral-700 hover:from-neutral-600 hover:to-neutral-600 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg active:scale-[0.98] transition flex items-center justify-center gap-2 text-xs">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Set Nearest as Departure Station</span>
+          </button>
+        </div>
+
+        <div id="locStateError" class="hidden fade-in-up">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-red-500/15 border border-red-500/25 text-red-400 flex items-center justify-center shrink-0">
+              <i class="fa-solid fa-location-pin-lock text-lg"></i>
+            </div>
+            <div class="flex-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-red-400">Location Unavailable</span>
+              <p id="locErrorMsg" class="text-xs text-neutral-300 mt-0.5">Unable to access your location.</p>
+            </div>
+          </div>
+          <button onclick="requestUserLocation()" class="w-full mt-3 bg-neutral-700/50 hover:bg-neutral-600/60 text-white font-semibold py-2 px-4 rounded-xl transition flex items-center justify-center gap-2 text-xs border border-neutral-600/40">
+            <i class="fa-solid fa-rotate"></i>
+            <span>Try Again</span>
+          </button>
+        </div>
+      </div>
+
       <div class="bg-gradient-to-br from-neutral-950/80 to-neutral-900 border border-neutral-500/40 rounded-2xl p-4 mb-4 shadow-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
@@ -187,37 +385,33 @@
               <i class="fa-solid fa-train-subway"></i>
             </div>
             <div>
-              <span class="text-[11px] text-neutral-400 block font-mono">Train #TR-204</span>
-              <span class="text-sm font-bold text-white">Kelana Jaya Bound</span>
+              <span id="hudTrainId" class="text-[11px] text-neutral-400 block font-mono">Next Train</span>
+              <span id="hudTrainRoute" class="text-sm font-bold text-white">Kelana Jaya Bound</span>
             </div>
           </div>
-          <span class="px-2 py-0.5 rounded-full bg-neutral-500/20 border border-neutral-500/40 text-neutral-400 text-[10px] font-bold">
+          <span id="hudTrainStatus" class="px-2 py-0.5 rounded-full bg-neutral-500/20 border border-neutral-500/40 text-neutral-400 text-[10px] font-bold">
             ON TRACK
           </span>
         </div>
-
         <div class="mt-3 pt-3 border-t border-neutral-800 grid grid-cols-2 gap-2 text-xs">
           <div>
-            <span class="text-neutral-400 text-[10px] block">Current Location:</span>
+            <span class="text-neutral-400 text-[10px] block">Your Station:</span>
             <span id="hudCurrentStation" class="font-bold text-neutral-400 text-sm">SS15</span>
           </div>
           <div class="text-right">
-            <span class="text-neutral-400 text-[10px] block">Next Station / ETA:</span>
-            <span id="hudNextStation" class="font-bold text-neutral-400 text-sm">Subang Jaya (3 mins)</span>
+            <span class="text-neutral-400 text-[10px] block">Next Train Arrives:</span>
+            <span id="hudNextStation" class="font-bold text-neutral-400 text-sm">—</span>
           </div>
         </div>
       </div>
 
-      <!-- Interactive Station Progression Tracker -->
       <div class="bg-neutral-800/40 border border-neutral-700/60 rounded-2xl p-4">
-        <div class="text-xs font-bold text-neutral-300 mb-3 uppercase tracking-wider">Line Progression (Southbound)</div>
-        <div class="train-track space-y-4 text-xs" id="stationTrackContainer">
-          <!-- Populated by JS -->
-        </div>
+        <div class="text-xs font-bold text-neutral-300 mb-3 uppercase tracking-wider">Line Progression · Live ETA</div>
+        <div class="train-track space-y-4 text-xs" id="stationTrackContainer"></div>
       </div>
     </main>
 
-    <!-- TAB 3: ALERTS SCREEN (Person 2 Wireframe 3 + ERD Delays Table) -->
+    <!-- TAB 3: ALERTS SCREEN -->
     <main id="tab-alerts" class="screen hidden flex-1 p-5 pb-24 overflow-y-auto">
       <div class="flex justify-between items-center mb-4">
         <div>
@@ -229,24 +423,22 @@
         </span>
       </div>
 
-      <!-- Urgent Arrival Banner (Directly from Person 2 Wireframe 3) -->
-      <div class="bg-green-950/20 border border-green-500/35 rounded-2xl p-4 mb-3 shadow-lg shadow-green-950/10">
+      <div id="arrivalAlertCard" class="bg-green-950/20 border border-green-500/35 rounded-2xl p-4 mb-3 shadow-lg shadow-green-950/10">
         <div class="flex items-start gap-3">
           <div class="w-9 h-9 rounded-xl bg-green-500/15 text-green-400 flex items-center justify-center shrink-0 text-base">
             <i class="fa-solid fa-bell"></i>
           </div>
           <div class="flex-1">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-green-400">ARRIVING SOON · ON TIME</span>
-              <span class="text-[10px] text-neutral-400">Just Now</span>
+              <span id="arrivalAlertStatus" class="text-[10px] font-bold uppercase tracking-wider text-green-400">ARRIVING SOON · ON TIME</span>
+              <span id="arrivalAlertTime" class="text-[10px] text-neutral-400">—</span>
             </div>
-            <p class="text-sm font-bold text-white mt-0.5">Your train arrives in 3 minutes</p>
-            <p class="text-xs text-neutral-300 mt-0.5">Platform 2 &bull; KL Sentral Interchange</p>
+            <p id="arrivalAlertMsg" class="text-sm font-bold text-white mt-0.5">Waiting for train data…</p>
+            <p id="arrivalAlertDetail" class="text-xs text-neutral-300 mt-0.5">Platform 1 &bull; Nearest Station</p>
           </div>
         </div>
       </div>
 
-      <!-- Disruption Delay Alert (Directly from Person 2 Wireframe 3) -->
       <div class="bg-red-950/20 border border-red-500/40 rounded-2xl p-4 mb-4 shadow-lg shadow-red-950/10">
         <div class="flex items-start gap-3">
           <div class="w-9 h-9 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center shrink-0 text-base">
@@ -263,7 +455,6 @@
         </div>
       </div>
 
-      <!-- Alert Preferences matching SAD Section 2 user story -->
       <div class="bg-neutral-800/40 border border-neutral-700/60 rounded-2xl p-4">
         <h3 class="text-xs font-bold text-white uppercase tracking-wider mb-3">Notification Preferences</h3>
         <div class="space-y-3 text-xs">
@@ -283,7 +474,7 @@
       </div>
     </main>
 
-    <!-- Bottom Navigation Bar (Matching P2 Wireframe 4-Icon Bottom Nav) -->
+    <!-- Bottom Navigation Bar -->
     <nav class="fixed bottom-0 left-0 right-0 max-w-[420px] mx-auto bg-neutral-900/90 backdrop-blur border-t border-neutral-800 p-2 flex justify-around items-center z-50">
       <button onclick="switchTab('search')" id="nav-search" class="nav-btn flex flex-col items-center gap-1 text-neutral-400 px-4 py-1.5 transition">
         <i class="fa-solid fa-house text-base"></i>
@@ -304,26 +495,199 @@
   </div>
 
   <script>
-    // System Data Objects (Reflecting Person 5 ERD Tables: Stations, Trains, Schedules, Delays)
+    // ══════════════════════════════════════════════════════════
+    // Full LRT Kelana Jaya Line — 36 stations (KJ1–KJ37)
+    // with GPS coordinates and cumulative distance from Gombak
+    // ══════════════════════════════════════════════════════════
     const railwaySystem = {
       stations: [
-        { id: 1, name: "SS15", code: "KJ29", distanceKm: 0 },
-        { id: 2, name: "Subang Jaya", code: "KJ28", distanceKm: 2.1 },
-        { id: 3, name: "Glenmarie", code: "KJ27", distanceKm: 4.8 },
-        { id: 4, name: "Kelana Jaya", code: "KJ24", distanceKm: 8.2 },
-        { id: 5, name: "Asia Jaya", code: "KJ21", distanceKm: 11.5 },
-        { id: 6, name: "Universiti", code: "KJ19", distanceKm: 13.1 },
-        { id: 7, name: "KL Sentral", code: "KJ15", distanceKm: 18.0 }
+        { id: 1,  name: "Gombak",          code: "KJ1",  distanceKm: 0.0,  lat: 3.2631, lng: 101.6864 },
+        { id: 2,  name: "Taman Melati",    code: "KJ2",  distanceKm: 1.8,  lat: 3.2505, lng: 101.6917 },
+        { id: 3,  name: "Wangsa Maju",     code: "KJ3",  distanceKm: 3.2,  lat: 3.2371, lng: 101.6943 },
+        { id: 4,  name: "Sri Rampai",      code: "KJ4",  distanceKm: 4.5,  lat: 3.2226, lng: 101.6962 },
+        { id: 5,  name: "Setiawangsa",     code: "KJ5",  distanceKm: 6.0,  lat: 3.2112, lng: 101.6989 },
+        { id: 6,  name: "Jelatek",         code: "KJ6",  distanceKm: 7.5,  lat: 3.1963, lng: 101.7000 },
+        { id: 7,  name: "Dato' Keramat",   code: "KJ7",  distanceKm: 9.0,  lat: 3.1833, lng: 101.7022 },
+        { id: 8,  name: "Damai",           code: "KJ8",  distanceKm: 10.3, lat: 3.1723, lng: 101.7044 },
+        { id: 9,  name: "Ampang Park",     code: "KJ9",  distanceKm: 11.8, lat: 3.1609, lng: 101.7189 },
+        { id: 10, name: "KLCC",            code: "KJ10", distanceKm: 13.2, lat: 3.1558, lng: 101.7133 },
+        { id: 11, name: "Kampung Baru",    code: "KJ11", distanceKm: 14.2, lat: 3.1525, lng: 101.7029 },
+        { id: 12, name: "Dang Wangi",      code: "KJ12", distanceKm: 15.2, lat: 3.1504, lng: 101.6981 },
+        { id: 13, name: "Masjid Jamek",    code: "KJ13", distanceKm: 16.0, lat: 3.1491, lng: 101.6956 },
+        { id: 14, name: "Pasar Seni",      code: "KJ14", distanceKm: 17.0, lat: 3.1421, lng: 101.6944 },
+        { id: 15, name: "KL Sentral",      code: "KJ15", distanceKm: 18.5, lat: 3.1343, lng: 101.6863 },
+        { id: 16, name: "Bangsar",         code: "KJ16", distanceKm: 20.0, lat: 3.1245, lng: 101.6802 },
+        { id: 17, name: "Abdullah Hukum",  code: "KJ17", distanceKm: 21.2, lat: 3.1222, lng: 101.6728 },
+        { id: 18, name: "Kerinchi",        code: "KJ18", distanceKm: 22.5, lat: 3.1170, lng: 101.6649 },
+        { id: 19, name: "Universiti",      code: "KJ19", distanceKm: 24.0, lat: 3.1167, lng: 101.6552 },
+        { id: 20, name: "Taman Paramount", code: "KJ20", distanceKm: 25.2, lat: 3.1099, lng: 101.6497 },
+        { id: 21, name: "Asia Jaya",       code: "KJ21", distanceKm: 26.5, lat: 3.1087, lng: 101.6458 },
+        { id: 22, name: "Taman Bahagia",   code: "KJ22", distanceKm: 27.5, lat: 3.1079, lng: 101.6381 },
+        { id: 23, name: "Taman Jaya",      code: "KJ23", distanceKm: 28.5, lat: 3.1072, lng: 101.6286 },
+        { id: 24, name: "Kelana Jaya",     code: "KJ24", distanceKm: 30.0, lat: 3.1064, lng: 101.6046 },
+        { id: 25, name: "Lembah Subang",   code: "KJ25", distanceKm: 31.5, lat: 3.1007, lng: 101.5984 },
+        { id: 26, name: "Ara Damansara",   code: "KJ26", distanceKm: 33.0, lat: 3.0966, lng: 101.5944 },
+        { id: 27, name: "Glenmarie",       code: "KJ27", distanceKm: 34.5, lat: 3.0905, lng: 101.5938 },
+        { id: 28, name: "Subang Jaya",     code: "KJ28", distanceKm: 36.0, lat: 3.0843, lng: 101.5866 },
+        { id: 29, name: "SS15",            code: "KJ29", distanceKm: 37.5, lat: 3.0778, lng: 101.5872 },
+        { id: 30, name: "USJ7",            code: "KJ30", distanceKm: 38.5, lat: 3.0716, lng: 101.5844 },
+        { id: 31, name: "Taipan",          code: "KJ31", distanceKm: 39.5, lat: 3.0649, lng: 101.5825 },
+        { id: 32, name: "Wawasan",         code: "KJ32", distanceKm: 40.5, lat: 3.0584, lng: 101.5808 },
+        { id: 33, name: "USJ21",           code: "KJ33", distanceKm: 41.5, lat: 3.0516, lng: 101.5785 },
+        { id: 34, name: "Alam Megah",      code: "KJ34", distanceKm: 42.5, lat: 3.0448, lng: 101.5766 },
+        { id: 35, name: "Subang Alam",     code: "KJ35", distanceKm: 43.5, lat: 3.0389, lng: 101.5743 },
+        { id: 36, name: "Putra Heights",   code: "KJ37", distanceKm: 46.4, lat: 3.0285, lng: 101.5675 }
       ],
       trains: [],
       lrtSchedule: { firstService: 5 * 60 + 30, lastService: 23 * 60 + 30, frequency: 15 },
       timezone: "Asia/Kuala_Lumpur",
       serviceStatus: null,
       serviceStatusSource: 'schedule',
-      currentTrainIndex: 0 // Track progression index
+      currentTrainIndex: 0,
+      userLocation: null,
+      nearestStation: null,
+      geoWatchId: null
     };
 
-    // Tab Switcher
+    // ══════════════════════════════════════════════════════════
+    // GEOLOCATION — Nearest Station Finder
+    // ══════════════════════════════════════════════════════════
+
+    function haversineDistance(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const toRad = deg => deg * (Math.PI / 180);
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLng / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    function findNearestStation(lat, lng) {
+      return railwaySystem.stations
+        .map(st => ({ ...st, userDistKm: haversineDistance(lat, lng, st.lat, st.lng) }))
+        .sort((a, b) => a.userDistKm - b.userDistKm);
+    }
+
+    function setLocationState(state) {
+      ['Idle', 'Loading', 'Success', 'Error'].forEach(s => {
+        document.getElementById(`locState${s}`).classList.toggle('hidden', s.toLowerCase() !== state);
+      });
+    }
+
+    function walkingMinutes(distKm) {
+      return Math.max(1, Math.round(distKm / 5 * 60));
+    }
+
+    function updateLocationUI(position) {
+      const { latitude: lat, longitude: lng, accuracy } = position.coords;
+      railwaySystem.userLocation = { lat, lng, accuracy };
+
+      const ranked = findNearestStation(lat, lng);
+      const nearest = ranked[0];
+      railwaySystem.nearestStation = nearest;
+
+      document.getElementById('nearestStationName').textContent = nearest.name;
+      document.getElementById('nearestStationCode').textContent = nearest.code;
+      document.getElementById('nearestStationDist').textContent =
+        nearest.userDistKm < 1
+          ? `${Math.round(nearest.userDistKm * 1000)} m`
+          : `${nearest.userDistKm.toFixed(2)} km`;
+      document.getElementById('nearestWalkTime').textContent = `${walkingMinutes(nearest.userDistKm)} min`;
+      document.getElementById('gpsAccuracy').textContent =
+        accuracy < 50 ? `±${Math.round(accuracy)}m` : `±${(accuracy / 1000).toFixed(1)}km`;
+      document.getElementById('gpsCoords').textContent =
+        `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+
+      const maxDist = ranked[ranked.length - 1].userDistKm || 1;
+      const listContainer = document.getElementById('stationDistanceList');
+      listContainer.innerHTML = ranked.map((st, i) => {
+        const pct = Math.max(5, (st.userDistKm / maxDist) * 100);
+        const isNearest = i === 0;
+        const distLabel = st.userDistKm < 1
+          ? `${Math.round(st.userDistKm * 1000)} m`
+          : `${st.userDistKm.toFixed(2)} km`;
+        return `
+          <div class="flex items-center gap-2 ${isNearest ? 'bg-blue-950/30 border border-blue-500/20' : 'bg-neutral-900/40 border border-neutral-800/60'} rounded-lg p-2 transition">
+            <div class="w-6 text-center">
+              ${isNearest
+                ? '<i class="fa-solid fa-location-dot text-blue-400 text-xs"></i>'
+                : `<span class="text-[10px] text-neutral-500 font-mono">${i + 1}</span>`
+              }
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-semibold ${isNearest ? 'text-blue-300' : 'text-neutral-300'} truncate">${st.name}</span>
+                <span class="text-[10px] ${isNearest ? 'text-blue-400 font-bold' : 'text-neutral-400'} ml-2 shrink-0">${distLabel}</span>
+              </div>
+              <div class="w-full bg-neutral-800 rounded-full h-1">
+                <div class="station-distance-bar h-1 rounded-full ${isNearest ? 'bg-blue-500' : 'bg-neutral-600'}" style="width: ${pct}%"></div>
+              </div>
+            </div>
+            <span class="text-[9px] text-neutral-500 font-mono shrink-0 w-8 text-right">${st.code}</span>
+          </div>
+        `;
+      }).join('');
+
+      setLocationState('success');
+      renderStationTrack();
+      updateArrivalAlert();
+    }
+
+    function handleLocationError(error) {
+      const messages = {
+        1: 'Location permission denied. Please enable location access in your browser or phone settings and try again.',
+        2: 'Unable to determine your location. Make sure GPS is enabled on your device.',
+        3: 'Location request timed out. Please check your connection and try again.'
+      };
+      document.getElementById('locErrorMsg').textContent =
+        messages[error.code] || 'An unknown error occurred while accessing your location.';
+      setLocationState('error');
+      console.warn('[RailGo] Geolocation error:', error.message);
+    }
+
+    function requestUserLocation() {
+      if (!navigator.geolocation) {
+        document.getElementById('locErrorMsg').textContent =
+          'Geolocation is not supported by this browser. Try using a modern mobile browser.';
+        setLocationState('error');
+        return;
+      }
+
+      setLocationState('loading');
+      const geoOptions = { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 };
+      navigator.geolocation.getCurrentPosition(updateLocationUI, handleLocationError, geoOptions);
+
+      if (railwaySystem.geoWatchId !== null) {
+        navigator.geolocation.clearWatch(railwaySystem.geoWatchId);
+      }
+      railwaySystem.geoWatchId = navigator.geolocation.watchPosition(
+        updateLocationUI,
+        (err) => console.warn('[RailGo] Watch position error:', err.message),
+        { enableHighAccuracy: true, maximumAge: 60000 }
+      );
+    }
+
+    function setNearestAsOrigin() {
+      if (!railwaySystem.nearestStation) return;
+      const selectOrigin = document.getElementById('selectOrigin');
+      const stationName = railwaySystem.nearestStation.name;
+      const optionExists = Array.from(selectOrigin.options).some(opt => opt.value === stationName);
+      if (optionExists) selectOrigin.value = stationName;
+
+      const card = document.getElementById('locationCard');
+      card.classList.add('ring-2', 'ring-blue-500/60');
+      setTimeout(() => card.classList.remove('ring-2', 'ring-blue-500/60'), 800);
+
+      switchTab('search');
+      calculateRoute();
+    }
+
+    // ══════════════════════════════════════════════════════════
+    // TAB SWITCHER
+    // ══════════════════════════════════════════════════════════
+
     function switchTab(tabName) {
       document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
       document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -334,6 +698,10 @@
       document.getElementById(`tab-${tabName}`).classList.remove('hidden');
       document.getElementById(`nav-${tabName}`).classList.remove('text-neutral-400');
       document.getElementById(`nav-${tabName}`).classList.add('text-neutral-400');
+
+      if (tabName === 'map' && !railwaySystem.userLocation) {
+        setTimeout(() => requestUserLocation(), 400);
+      }
     }
 
     function getMalaysiaNow() {
@@ -378,15 +746,6 @@
         railwaySystem.serviceStatus = null;
         railwaySystem.serviceStatusSource = 'schedule';
       }
-      updateServiceStatusBadge();
-    }
-
-    function updateServiceStatusBadge() {
-      const badge = document.getElementById('serviceStatusBadge');
-      if (!badge) return;
-      const isApi = railwaySystem.serviceStatusSource === 'api';
-      badge.innerHTML = `<span class="w-2 h-2 rounded-full ${isApi ? 'bg-green-500' : 'bg-yellow-500'} pulse-dot"></span> ${isApi ? 'Live API · MYT' : 'Timetable · MYT'}`;
-      badge.title = isApi ? 'Live service status from api.mtrec.name.my' : 'Live API unavailable; showing scheduled LRT times';
     }
 
     function getLiveStatus(index) {
@@ -418,7 +777,7 @@
         const etaMin = minutesUntilDeparture + liveStatus.delay;
         return {
           id: `TR-${204 + index * 4}`,
-          route: 'SS15 -> KL Sentral',
+          route: 'Gombak -> Putra Heights',
           departure: formatScheduleTime(scheduleMinutes),
           etaMin,
           status: liveStatus.label,
@@ -428,10 +787,12 @@
         };
       }).filter(train => train.nextDay || train.departureMinutes <= lastService)
         .map(({ departureMinutes, nextDay, ...train }) => train);
+
       renderTrains();
+      renderStationTrack();
+      updateArrivalAlert();
     }
 
-    // Render Trains List in Search Tab
     function renderTrains() {
       const container = document.getElementById('trainList');
       container.innerHTML = railwaySystem.trains.map((t) => `
@@ -447,7 +808,7 @@
                   ${t.status}
                 </span>
               </div>
-              <span class="text-[11px] text-neutral-400 font-mono">${t.id} &bull; To KL Sentral</span>
+              <span class="text-[11px] text-neutral-400 font-mono">${t.id} &bull; ${t.route}</span>
             </div>
           </div>
           <div class="text-right">
@@ -458,7 +819,6 @@
       `).join('');
     }
 
-    // Dynamic Route Calculation (Matching DFD Process 1.4: Calculate ETA)
     function calculateRoute() {
       const orig = document.getElementById('selectOrigin').value;
       const dest = document.getElementById('selectDest').value;
@@ -470,77 +830,142 @@
 
       document.getElementById('resOriginText').innerText = orig;
       document.getElementById('resDestText').innerText = dest;
-      
-      // Calculate simple mock dynamic distance
+
       const st1 = railwaySystem.stations.find(s => s.name === orig) || { distanceKm: 0 };
       const st2 = railwaySystem.stations.find(s => s.name === dest) || { distanceKm: 15 };
       const diffKm = Math.abs(st2.distanceKm - st1.distanceKm) || 12.4;
-      const estMins = Math.round(diffKm * 1.8) + 4;
-      const stops = Math.max(2, Math.round(diffKm / 2.2));
+      const estMins = Math.round(diffKm * 1.5) + 3; // ~2 min/station avg
+      const idx1 = railwaySystem.stations.findIndex(s => s.name === orig);
+      const idx2 = railwaySystem.stations.findIndex(s => s.name === dest);
+      const stops = idx1 >= 0 && idx2 >= 0 ? Math.abs(idx2 - idx1) : Math.max(2, Math.round(diffKm / 1.3));
 
       document.getElementById('resDuration').innerText = `${estMins} mins`;
       document.getElementById('resStops').innerText = `${stops} stations`;
       document.getElementById('resDistance').innerText = `${diffKm.toFixed(1)} km`;
 
-      // Highlight update animation
       const card = document.getElementById('routeResultCard');
       card.classList.add('ring-2', 'ring-neutral-500');
       setTimeout(() => card.classList.remove('ring-2', 'ring-neutral-500'), 600);
     }
 
-    // Render Station Track in Live Map Tab
+    // ══════════════════════════════════════════════════════════
+    // STATION TRACK — GPS-aware with real train ETAs
+    // ══════════════════════════════════════════════════════════
     function renderStationTrack() {
       const container = document.getElementById('stationTrackContainer');
-      const curIdx = railwaySystem.currentTrainIndex;
+      const stations = railwaySystem.stations;
 
-      container.innerHTML = railwaySystem.stations.map((st, i) => {
-        const isCurrent = i === curIdx;
-        const isPassed = i < curIdx;
-        const isNext = i === curIdx + 1;
+      let userIdx = 0;
+      if (railwaySystem.nearestStation) {
+        const foundIdx = stations.findIndex(s => s.id === railwaySystem.nearestStation.id);
+        if (foundIdx >= 0) userIdx = foundIdx;
+      }
+
+      const nextTrain = railwaySystem.trains[0];
+      const baseEta = nextTrain ? nextTrain.etaMin : 5;
+      const perStopMin = 2; // ~2 min avg between stations on the full line
+
+      const trainAtUserMin = baseEta + (userIdx * perStopMin);
+
+      container.innerHTML = stations.map((st, i) => {
+        const isUser = i === userIdx;
+        const isBefore = i < userIdx;
+        const trainAtStationMin = baseEta + (i * perStopMin);
+
+        let timeLabel = '';
+        if (isUser) {
+          timeLabel = `<span class="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-bold"><i class="fa-solid fa-location-dot mr-1"></i>YOU · Train in ${trainAtUserMin} min</span>`;
+        } else if (isBefore) {
+          timeLabel = `<span class="text-[10px] text-neutral-500">Train here in ${trainAtStationMin} min</span>`;
+        } else {
+          const minsAfterUser = trainAtStationMin - trainAtUserMin;
+          timeLabel = `<span class="text-[10px] text-neutral-400 font-semibold">+${minsAfterUser} min after you</span>`;
+        }
 
         return `
           <div class="flex items-center gap-3 relative z-10">
             <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 
-              ${isCurrent ? 'bg-neutral-600 text-white ring-4 ring-neutral-500/30 shadow-lg shadow-neutral-500/50 pulse-dot' :
-                isPassed ? 'bg-neutral-700 text-neutral-400' : 'bg-neutral-800 text-neutral-300 border border-neutral-600'}">
-              ${isCurrent ? '<i class="fa-solid fa-train"></i>' : (i + 1)}
+              ${isUser ? 'bg-blue-600 text-white ring-4 ring-blue-500/30 shadow-lg shadow-blue-500/40 location-breathe' :
+                isBefore ? 'bg-neutral-700 text-neutral-500' : 'bg-neutral-800 text-neutral-300 border border-neutral-600'}">
+              ${isUser ? '<i class="fa-solid fa-location-dot"></i>' : (i + 1)}
             </div>
-            <div class="flex-1 bg-neutral-900/60 border ${isCurrent ? 'border-neutral-500/50 bg-neutral-950/20' : 'border-neutral-800'} rounded-xl p-2.5 flex justify-between items-center">
+            <div class="flex-1 bg-neutral-900/60 border ${isUser ? 'border-blue-500/40 bg-blue-950/20' : isBefore ? 'border-neutral-800/60' : 'border-neutral-800'} rounded-xl p-2.5 flex justify-between items-center">
               <div>
-                <div class="font-bold text-sm ${isCurrent ? 'text-neutral-400' : isPassed ? 'text-neutral-500' : 'text-neutral-200'}">
+                <div class="font-bold text-sm ${isUser ? 'text-blue-300' : isBefore ? 'text-neutral-500' : 'text-neutral-200'}">
                   ${st.name}
                 </div>
                 <div class="text-[10px] text-neutral-400 font-mono">${st.code} &bull; Platform 1</div>
               </div>
               <div class="text-right">
-                ${isCurrent ? '<span class="text-[10px] px-2 py-0.5 rounded bg-neutral-500/30 text-neutral-300 font-bold">HERE NOW</span>' :
-                  isNext ? '<span class="text-[10px] text-neutral-400 font-bold">NEXT (3 min)</span>' :
-                  isPassed ? '<span class="text-[10px] text-neutral-500">Passed</span>' :
-                  `<span class="text-[10px] text-neutral-400">+${(i - curIdx) * 4} min</span>`}
+                ${timeLabel}
               </div>
             </div>
           </div>
         `;
       }).join('');
 
-      // Update HUD
-      const curSt = railwaySystem.stations[curIdx];
-      const nextSt = railwaySystem.stations[curIdx + 1] || { name: "Terminus" };
-      document.getElementById('hudCurrentStation').innerText = curSt.name;
-      document.getElementById('hudNextStation').innerText = `${nextSt.name} (${nextSt.name === "Terminus" ? "Arrived" : "3 mins"})`;
-    }
+      const userSt = stations[userIdx];
+      document.getElementById('hudCurrentStation').innerText = userSt.name;
 
-    // Step to Next Station (Simulation for Live Demo)
-    function simulateTrainMovement() {
-      if (railwaySystem.currentTrainIndex < railwaySystem.stations.length - 1) {
-        railwaySystem.currentTrainIndex++;
+      if (nextTrain) {
+        document.getElementById('hudTrainId').innerText = `Train ${nextTrain.id}`;
+        document.getElementById('hudNextStation').innerText = `In ${trainAtUserMin} min`;
+        document.getElementById('hudTrainStatus').innerText = nextTrain.status;
+        document.getElementById('hudTrainStatus').className =
+          `px-2 py-0.5 rounded-full text-[10px] font-bold ${
+            nextTrain.statusColor === 'red'
+              ? 'bg-red-500/20 border border-red-500/40 text-red-400'
+              : 'bg-green-500/20 border border-green-500/40 text-green-400'
+          }`;
       } else {
-        railwaySystem.currentTrainIndex = 0;
+        document.getElementById('hudTrainId').innerText = 'No Train';
+        document.getElementById('hudNextStation').innerText = 'Service ended';
       }
-      renderStationTrack();
     }
 
-    // Real-Time Clock
+    // ══════════════════════════════════════════════════════════
+    // ALERTS SYNC — Arriving Soon card mirrors live train data
+    // ══════════════════════════════════════════════════════════
+    function updateArrivalAlert() {
+      const nextTrain = railwaySystem.trains[0];
+      const statusEl = document.getElementById('arrivalAlertStatus');
+      const timeEl = document.getElementById('arrivalAlertTime');
+      const msgEl = document.getElementById('arrivalAlertMsg');
+      const detailEl = document.getElementById('arrivalAlertDetail');
+      const cardEl = document.getElementById('arrivalAlertCard');
+
+      if (!statusEl || !nextTrain) return;
+
+      const stations = railwaySystem.stations;
+      let userIdx = 0;
+      if (railwaySystem.nearestStation) {
+        const foundIdx = stations.findIndex(s => s.id === railwaySystem.nearestStation.id);
+        if (foundIdx >= 0) userIdx = foundIdx;
+      }
+
+      const perStopMin = 2;
+      const trainArrivalMin = nextTrain.etaMin + (userIdx * perStopMin);
+      const userStation = stations[userIdx];
+
+      if (trainArrivalMin <= 3) {
+        statusEl.textContent = `ARRIVING NOW · ${nextTrain.status}`;
+        cardEl.className = 'bg-green-950/30 border border-green-400/50 rounded-2xl p-4 mb-3 shadow-lg shadow-green-950/20';
+        statusEl.className = 'text-[10px] font-bold uppercase tracking-wider text-green-400';
+      } else if (trainArrivalMin <= 8) {
+        statusEl.textContent = `ARRIVING SOON · ${nextTrain.status}`;
+        cardEl.className = 'bg-green-950/20 border border-green-500/35 rounded-2xl p-4 mb-3 shadow-lg shadow-green-950/10';
+        statusEl.className = 'text-[10px] font-bold uppercase tracking-wider text-green-400';
+      } else {
+        statusEl.textContent = `NEXT TRAIN · ${nextTrain.status}`;
+        cardEl.className = 'bg-blue-950/20 border border-blue-500/30 rounded-2xl p-4 mb-3 shadow-lg shadow-blue-950/10';
+        statusEl.className = 'text-[10px] font-bold uppercase tracking-wider text-blue-400';
+      }
+
+      timeEl.textContent = nextTrain.departure;
+      msgEl.textContent = `Train ${nextTrain.id} arrives at ${userStation.name} in ${trainArrivalMin} min`;
+      detailEl.innerHTML = `Platform 1 &bull; ${userStation.code} &bull; ${nextTrain.status}`;
+    }
+
     function updateClock() {
       const now = new Date();
       const time = new Intl.DateTimeFormat('en-MY', {
@@ -553,11 +978,11 @@
       if (mapLiveTime) mapLiveTime.innerText = formattedTime;
     }
 
-    // Initialize App
     window.addEventListener('DOMContentLoaded', () => {
       refreshTrainSchedule();
       fetchServiceStatus().then(refreshTrainSchedule);
       renderStationTrack();
+      updateArrivalAlert();
       setInterval(updateClock, 1000);
       setInterval(() => fetchServiceStatus().then(refreshTrainSchedule), 30000);
       updateClock();
