@@ -543,8 +543,10 @@
   selectedRoute: null,
   userLocation: null,
       nearestStation: null,
-      geoWatchId: null
-    };
+  geoWatchId: null,
+  bestLocationAccuracy: Infinity,
+  lastLocationAt: null
+  };
 
     // ══════════════════════════════════════════════════════════
     // GEOLOCATION — Nearest Station Finder
@@ -579,6 +581,15 @@
 
     function updateLocationUI(position) {
       const { latitude: lat, longitude: lng, accuracy } = position.coords;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) || !Number.isFinite(accuracy)) {
+        handleLocationError({ code: 2, message: 'Invalid location fix' });
+        return;
+      }
+
+      // Keep the most precise recent GPS fix so a low-quality network fix cannot move the nearest station.
+      if (accuracy > railwaySystem.bestLocationAccuracy && railwaySystem.userLocation) return;
+      railwaySystem.bestLocationAccuracy = accuracy;
+      railwaySystem.lastLocationAt = position.timestamp || Date.now();
       railwaySystem.userLocation = { lat, lng, accuracy };
 
       const ranked = findNearestStation(lat, lng);
@@ -593,7 +604,8 @@
           : `${nearest.userDistKm.toFixed(2)} km`;
       document.getElementById('nearestWalkTime').textContent = `${walkingMinutes(nearest.userDistKm)} min`;
       document.getElementById('gpsAccuracy').textContent =
-        accuracy < 50 ? `±${Math.round(accuracy)}m` : `±${(accuracy / 1000).toFixed(1)}km`;
+        accuracy <= 20 ? `±${Math.round(accuracy)}m · Excellent` : accuracy <= 50 ? `±${Math.round(accuracy)}m · Good` : `±${Math.round(accuracy)}m · Low`;
+      document.getElementById('gpsAccuracy').title = 'Browser-reported GPS accuracy radius. Move outdoors for a more precise fix.';
       document.getElementById('gpsCoords').textContent =
         `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
       document.getElementById('nearestStationsList').innerHTML = ranked.slice(0, 2).map((station, index) => `
@@ -633,7 +645,9 @@
       }
 
       setLocationState('loading');
-      const geoOptions = { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 };
+      railwaySystem.bestLocationAccuracy = Infinity;
+      railwaySystem.lastLocationAt = null;
+      const geoOptions = { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 };
       navigator.geolocation.getCurrentPosition(updateLocationUI, handleLocationError, geoOptions);
 
       if (railwaySystem.geoWatchId !== null) {
@@ -642,7 +656,7 @@
       railwaySystem.geoWatchId = navigator.geolocation.watchPosition(
         updateLocationUI,
         (err) => console.warn('[RailGo] Watch position error:', err.message),
-        { enableHighAccuracy: true, maximumAge: 60000 }
+        { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
       );
     }
 
