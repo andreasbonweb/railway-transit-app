@@ -850,22 +850,28 @@
         if (foundIdx >= 0) userIdx = foundIdx;
       }
       const startIdx = routeOriginIdx >= 0 ? routeOriginIdx : userIdx;
-      const endIdx = routeDestinationIdx >= startIdx ? routeDestinationIdx : stations.length - 1;
+      const hasSelectedRoute = routeOriginIdx >= 0 && routeDestinationIdx >= 0;
+      const direction = hasSelectedRoute && routeDestinationIdx < startIdx ? -1 : 1;
+      const endIdx = hasSelectedRoute ? routeDestinationIdx : stations.length - 1;
+      const routeStations = hasSelectedRoute
+        ? stations.slice(Math.min(startIdx, endIdx), Math.max(startIdx, endIdx) + 1)
+        : stations.slice(startIdx);
+      if (direction < 0) routeStations.reverse();
 
       const nextTrain = railwaySystem.trains[0];
       const baseEta = nextTrain ? nextTrain.etaMin : 5;
       const perStopMin = 2; // ~2 min avg between stations on the full line
 
-      const visibleStations = stations.slice(startIdx, endIdx + 1);
+      const visibleStations = routeStations;
       const trainAtUserMin = baseEta;
 
       container.innerHTML = visibleStations.map((st, visibleIdx) => {
-        const i = startIdx + visibleIdx;
+        const i = stations.findIndex(station => station.id === st.id);
         const isUser = i === startIdx;
-        const isDeparture = railwaySystem.selectedRoute && i === startIdx;
-        const isArrival = railwaySystem.selectedRoute && i === endIdx;
+        const isDeparture = hasSelectedRoute && visibleIdx === 0;
+        const isArrival = hasSelectedRoute && visibleIdx === visibleStations.length - 1;
         const isBefore = i < startIdx;
-        const trainAtStationMin = baseEta + ((i - startIdx) * perStopMin);
+        const trainAtStationMin = baseEta + (visibleIdx * perStopMin);
 
         let timeLabel = '';
         if (isArrival) {
@@ -906,7 +912,10 @@
 
       if (nextTrain) {
         document.getElementById('hudTrainId').innerText = `Train ${nextTrain.id}`;
-        document.getElementById('hudNextStation').innerText = `In ${trainAtUserMin} min`;
+        const selectedArrival = railwaySystem.selectedRoute?.destination || '—';
+      document.getElementById('hudNextStation').innerText = railwaySystem.selectedRoute
+        ? `${selectedArrival} · ${trainAtUserMin + ((visibleStations.length - 1) * perStopMin)} min`
+        : `In ${trainAtUserMin} min`;
         document.getElementById('hudTrainStatus').innerText = nextTrain.status;
         document.getElementById('hudTrainStatus').className =
           `px-2 py-0.5 rounded-full text-[10px] font-bold ${
